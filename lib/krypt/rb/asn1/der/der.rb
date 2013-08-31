@@ -1,7 +1,8 @@
+# encoding: BINARY
+
 module Krypt::Rb::Asn1
   class Der
     include IOEncodable
-    include Encoder
 
     attr_reader :tag, :length, :value
 
@@ -13,6 +14,12 @@ module Krypt::Rb::Asn1
       else
         init_options(options_or_tag)
       end
+    end
+
+    def encode_to(io)
+      @tag.encode_to(io)
+      @length.encode_to(io)
+      io << @value
     end
 
     private
