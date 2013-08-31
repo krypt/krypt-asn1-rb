@@ -1,8 +1,8 @@
-require_relative 'encoder'
+require_relative 'cached_encoding'
 
-module Krypt::Asn1::Rb
-  class Tag
-    include IOEncodable
+module Krypt::Rb::Asn1
+  class Der::Tag
+    include Der::CachedEncoding
 
     # TODO move constants to Krypt::Asn1
     END_OF_CONTENTS  = 0x00
@@ -40,7 +40,7 @@ module Krypt::Asn1::Rb
 
     def initialize(options)
       @tag = options[:tag] || argument_error('Tag must be provided')
-      @tag_class = TagClass.of(options[:tag_class])
+      @tag_class = Der::TagClass.of(options[:tag_class])
       @constructed = !!options[:constructed]
       @encoding = options[:encoding]
     end
@@ -50,7 +50,7 @@ module Krypt::Asn1::Rb
     private
 
     def encode
-      @encoding = TagEncoder.encode(self)
+      @encoding = Der::TagEncoder.encode(self)
     end
 
   end

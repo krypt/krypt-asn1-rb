@@ -1,8 +1,8 @@
-require_relative 'encoder'
+require_relative 'cached_encoding'
 
-module Krypt::Asn1::Rb
-  class Length
-    include IOEncodable
+module Krypt::Rb::Asn1
+  class Der::Length
+    include Der::CachedEncoding
 
     INDEFINITE_LENGTH_MASK = 0x80
 
@@ -19,7 +19,7 @@ module Krypt::Asn1::Rb
     private
 
     def encode
-      @encoding = LengthEncoder.encode(self)
+      @encoding = Der::LengthEncoder.encode(self)
     end
 
   end

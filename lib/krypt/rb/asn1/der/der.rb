@@ -1,10 +1,7 @@
-# encoding: BINARY
-
-require_relative 'encoder'
-
-module Krypt::Asn1::Rb
-  class Asn1Object
-    include Asn1ObjectEncoder
+module Krypt::Rb::Asn1
+  class Der
+    include IOEncodable
+    include Encoder
 
     attr_reader :tag, :length, :value
 
@@ -21,16 +18,16 @@ module Krypt::Asn1::Rb
     private
 
     def init_options(options)
-      @tag = Tag.new(options)
+      @tag = Der::Tag.new(options)
       @value = options[:value]
       init_length(options)
     end
 
     def init_length(options)
       @length = if options[:indefinite]
-        Length.new(indefinite: true)
+        Der::Length.new(indefinite: true)
       else
-        Length.new(length: @value.size)
+        Der::Length.new(length: @value.size)
       end
     end
 

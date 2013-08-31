@@ -1,5 +1,5 @@
-module Krypt::Asn1::Rb
-  class DefiniteReader
+module Krypt::Rb::Asn1
+  class Der::DefiniteReader
 
     def initialize(io, length)
       @io = io

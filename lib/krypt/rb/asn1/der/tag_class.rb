@@ -1,5 +1,5 @@
-module Krypt::Asn1::Rb
-  class TagClass
+module Krypt::Rb::Asn1
+  class Der::TagClass
 
     attr_reader :tag_class, :mask
 

@@ -6,4 +6,4 @@ elsif ENV['TRAVIS']
   Coveralls.wear!
 end
 
-require 'krypt/asn1/rb'
+require 'krypt/rb/asn1'

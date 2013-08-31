@@ -1,5 +1,5 @@
-module Krypt::Asn1::Rb
-  module IOEncodable
+module Krypt::Rb::Asn1
+  module Der::CachedEncoding
 
     def encoding
       @encoding || encode

@@ -2,15 +2,15 @@
 
 require 'spec_helper'
 
-describe Krypt::Asn1::Rb::Asn1Object do
+describe Krypt::Rb::Asn1::Der do
 
-  let(:asn) { Krypt::Asn1::Rb::Asn1Object }
-  let(:tag) { Krypt::Asn1::Rb::Tag }
-  let(:len) { Krypt::Asn1::Rb::Length }
+  let(:der) { Krypt::Rb::Asn1::Der }
+  let(:tag) { Krypt::Rb::Asn1::Der::Tag }
+  let(:len) { Krypt::Rb::Asn1::Der::Length }
 
   describe '#encoding' do
 
-    subject { asn.new(tag: t, tag_class: tc, constructed: cons, indefinite: indef, value: v) }
+    subject { der.new(tag: t, tag_class: tc, constructed: cons, indefinite: indef, value: v) }
 
     context 'definite length' do
       let(:indef) { false }

@@ -1,7 +1,7 @@
 # encoding: BINARY
 
-module Krypt::Asn1::Rb
-  module TagEncoder
+module Krypt::Rb::Asn1
+  module Der::TagEncoder
 
     module_function
 
@@ -21,7 +21,7 @@ module Krypt::Asn1::Rb
     def complex_tag(tag)
       tag_byte = cons_or_null_byte(tag)
       tag_byte |= tag.tag_class.mask
-      tag_byte |= Tag::COMPLEX_TAG_MASK
+      tag_byte |= Der::Tag::COMPLEX_TAG_MASK
 
       process_tag(tag.tag).prepend(tag_byte.chr)
     end
@@ -32,7 +32,7 @@ module Krypt::Asn1::Rb
 
       while tag > 0
         byte = tag & 0x7f
-        byte |= Length::INDEFINITE_LENGTH_MASK
+        byte |= Der::Length::INDEFINITE_LENGTH_MASK
         buf.prepend(byte.chr)
         tag >>= 7
       end
@@ -41,8 +41,8 @@ module Krypt::Asn1::Rb
     end
 
     def cons_or_null_byte(tag)
-      return Tag::CONSTRUCTED_MASK if tag.tag_class.to_sym == :EXPLICIT
-      tag.constructed? ? Tag::CONSTRUCTED_MASK : 0x00
+      return Der::Tag::CONSTRUCTED_MASK if tag.tag_class.to_sym == :EXPLICIT
+      tag.constructed? ? Der::Tag::CONSTRUCTED_MASK : 0x00
     end
 
   end

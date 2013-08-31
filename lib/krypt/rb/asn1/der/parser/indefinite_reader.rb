@@ -1,7 +1,7 @@
 # encoding: BINARY
 
-module Krypt::Asn1::Rb
-  class IndefiniteReader
+module Krypt::Rb::Asn1
+  class Der::IndefiniteReader
 
     def initialize(header_parser)
       @parser = header_parser

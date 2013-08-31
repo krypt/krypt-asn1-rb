@@ -1,7 +1,7 @@
 # encoding: BINARY
 
-module Krypt::Asn1::Rb
-  class HeaderParser
+module Krypt::Rb::Asn1
+  class Der::HeaderParser
 
     attr_reader :io
 
@@ -17,7 +17,7 @@ module Krypt::Asn1::Rb
       return nil if @io.eof?
       tag = parse_tag
       length = parse_length
-      Header.new(tag, length, self)
+      Der::Header.new(tag, length, self)
     end
 
     private
@@ -33,7 +33,7 @@ module Krypt::Asn1::Rb
 
     def parse_tag
       b = @io.getbyte
-      if match(b, Tag::COMPLEX_TAG_MASK)
+      if match(b, Der::Tag::COMPLEX_TAG_MASK)
         complex_tag(b)
       else
         primitive_tag(b)
@@ -42,21 +42,21 @@ module Krypt::Asn1::Rb
 
     def parse_length
       b = @io.readbyte
-      mask = Length::INDEFINITE_LENGTH_MASK
+      mask = Der::Length::INDEFINITE_LENGTH_MASK
 
       if b == mask
-        Length.new(indefinite: true, encoding: b.chr)
+        Der::Length.new(indefinite: true, encoding: b.chr)
       elsif match(b, mask)
         complex_definite_length(b)
       else
-        Length.new(length: b, encoding: b.chr)
+        Der::Length.new(length: b, encoding: b.chr)
       end
     end
 
     def primitive_tag(b)
       with_tc_and_cons(b) do |tc, cons|
-        tag = b & Tag::COMPLEX_TAG_MASK
-        Tag.new(tag: tag, tag_class: tc, constructed: cons, encoding: b.chr)
+        tag = b & Der::Tag::COMPLEX_TAG_MASK
+        Der::Tag.new(tag: tag, tag_class: tc, constructed: cons, encoding: b.chr)
       end
     end
 
@@ -65,7 +65,7 @@ module Krypt::Asn1::Rb
         tag = 0
         buf = b.chr
         b = @io.readbyte
-        if b == Length::INDEFINITE_LENGTH_MASK
+        if b == Der::Length::INDEFINITE_LENGTH_MASK
           raise "Bits 7 to 1 of the first subsequent octet shall not be 0 for complex tag encodings"
         end
 
@@ -75,13 +75,13 @@ module Krypt::Asn1::Rb
           buf << b
         end
 
-        while match(b, Length::INDEFINITE_LENGTH_MASK)
+        while match(b, Der::Length::INDEFINITE_LENGTH_MASK)
           update.call
           b = @io.readbyte
         end
 
         update.call
-        Tag.new(tag: tag, tag_class: tc, constructed: cons, encoding: buf)
+        Der::Tag.new(tag: tag, tag_class: tc, constructed: cons, encoding: buf)
       end
     end
 
@@ -101,12 +101,12 @@ module Krypt::Asn1::Rb
         buf << b
       end
 
-      Length.new(length: len, encoding: buf)
+      Der::Length.new(length: len, encoding: buf)
     end
 
     def with_tc_and_cons(b)
-      tc = TagClass.of_mask(b & TagClass::PRIVATE)
-      cons = match(b, Tag::CONSTRUCTED_MASK)
+      tc = Der::TagClass.of_mask(b & Der::TagClass::PRIVATE)
+      cons = match(b, Der::Tag::CONSTRUCTED_MASK)
       yield tc, cons
     end
 

@@ -2,9 +2,9 @@
 
 require 'spec_helper'
 
-describe Krypt::Asn1::Rb::Length do
+describe Krypt::Rb::Asn1::Der::Length do
 
-  let(:len) { Krypt::Asn1::Rb::Length }
+  let(:len) { Krypt::Rb::Asn1::Der::Length }
 
   describe '#encoding' do
 

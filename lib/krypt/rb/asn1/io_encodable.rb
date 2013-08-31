@@ -1,13 +1,7 @@
 # encoding: BINARY
 
-module Krypt::Asn1::Rb
-  module Asn1ObjectEncoder
-
-    def encode_to(io)
-      @tag.encode_to(io)
-      @length.encode_to(io)
-      io << @value
-    end
+module Krypt::Rb::Asn1
+  module IOEncodable
 
     def encoding
       # String.new enforces BINARY encoding
@@ -18,4 +12,3 @@ module Krypt::Asn1::Rb
 
   end
 end
-

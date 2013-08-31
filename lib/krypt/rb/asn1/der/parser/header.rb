@@ -1,5 +1,5 @@
-module Krypt::Asn1::Rb
-  class Header
+module Krypt::Rb::Asn1
+  class Der::Header
 
     attr_reader :tag, :length
 
@@ -10,7 +10,7 @@ module Krypt::Asn1::Rb
     end
 
     def asn1_object
-      Asn1Object.new(@tag, @length, value)
+      Der.new(@tag, @length, value)
     end
 
     def value
@@ -25,9 +25,9 @@ module Krypt::Asn1::Rb
 
     def new_reader
       @reader = if @length.indefinite?
-        IndefiniteReader.new(@parser)
+        Der::IndefiniteReader.new(@parser)
       else
-        DefiniteReader.new(@parser.io, @length.length)
+        Der::DefiniteReader.new(@parser.io, @length.length)
       end
     end
 

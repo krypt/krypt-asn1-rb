@@ -1,12 +1,12 @@
 # encoding: BINARY
 
-module Krypt::Asn1::Rb
-  module LengthEncoder
+module Krypt::Rb::Asn1
+  module Der::LengthEncoder
 
     module_function
 
     def encode(length)
-      return Length::INDEFINITE_LENGTH_MASK.chr if length.indefinite?
+      return Der::Length::INDEFINITE_LENGTH_MASK.chr if length.indefinite?
 
       len = length.length
 
@@ -22,7 +22,7 @@ module Krypt::Asn1::Rb
     def complex_length(len)
       bytes = length_bytes(len)
       # TODO raise error if bytes.size too large
-      bytes.unshift(bytes.size | Length::INDEFINITE_LENGTH_MASK)
+      bytes.unshift(bytes.size | Der::Length::INDEFINITE_LENGTH_MASK)
       bytes.pack('C*')
     end
 
