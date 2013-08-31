@@ -1,5 +1,5 @@
 [![Build Status](https://secure.travis-ci.org/krypt/krypt-asn1-rb.png)](http://travis-ci.org/krypt/krypt-asn1-rb)
-[![Code Climate](https://codeclimate.com/badge.png)](https://codeclimate.com/github/krypt/krypt-asn1-rb)
+[![Code Climate](https://codeclimate.com/github/krypt/krypt-asn1-rb.png)](https://codeclimate.com/github/krypt/krypt-asn1-rb)
 [![Coverage Statius](https://coveralls.io/repos/krypt/krypt-asn1-rb/badge.png?branch=master)](https://coveralls.io/r/krypt/krypt-asn1-rb)
 
 # krypt-asn1-rb
