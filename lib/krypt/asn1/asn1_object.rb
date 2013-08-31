@@ -1,9 +1,8 @@
-# encoding: BINARY
-
-require_relative 'io_encodable'
+require_relative 'encoder'
 
 module Krypt::Asn1::Rb
   class Asn1Object
+    include Asn1ObjectEncoder
 
     attr_reader :tag, :length, :value
 
@@ -15,18 +14,6 @@ module Krypt::Asn1::Rb
       else
         init_options(options_or_tag)
       end
-    end
-
-    def encode_to(io)
-      @tag.encode_to(io)
-      @length.encode_to(io)
-      io << @value
-    end
-
-    def encoding
-      StringIO.new.tap do |io|
-        encode_to(io)
-      end.string
     end
 
     private

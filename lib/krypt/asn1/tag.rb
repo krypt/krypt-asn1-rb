@@ -1,6 +1,4 @@
-# encoding: BINARY
-
-require_relative 'io_encodable'
+require_relative 'encoder'
 
 module Krypt::Asn1::Rb
   class Tag
@@ -52,41 +50,7 @@ module Krypt::Asn1::Rb
     private
 
     def encode
-      @encoding = @tag < 31 ? simple_tag : complex_tag
-    end
-
-    def simple_tag
-      tag_byte = cons_or_null_byte
-      tag_byte |= @tag_class.mask
-      tag_byte |= @tag
-      tag_byte.chr
-    end
-
-    def complex_tag
-      tag_byte = cons_or_null_byte
-      tag_byte |= @tag_class.mask
-      tag_byte |= COMPLEX_TAG_MASK
-
-      process_tag.prepend(tag_byte.chr)
-    end
-
-    def process_tag
-      tmp = @tag
-      buf = (tmp & 0x7f).chr
-      tmp >>= 7
-
-      while tmp > 0
-        byte = tmp & 0x7f
-        byte |= Length::INDEFINITE_LENGTH_MASK
-        buf.prepend(byte.chr)
-        tmp >>= 7
-      end
-
-      buf
-    end
-
-    def cons_or_null_byte
-      @constructed ? CONSTRUCTED_MASK : 0x00
+      @encoding = TagEncoder.encode(self)
     end
 
   end
