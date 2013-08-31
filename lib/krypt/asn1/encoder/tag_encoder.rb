@@ -41,6 +41,7 @@ module Krypt::Asn1::Rb
     end
 
     def cons_or_null_byte(tag)
+      return Tag::CONSTRUCTED_MASK if tag.tag_class.to_sym == :EXPLICIT
       tag.constructed? ? Tag::CONSTRUCTED_MASK : 0x00
     end
 

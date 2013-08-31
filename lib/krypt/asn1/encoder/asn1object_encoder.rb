@@ -10,7 +10,8 @@ module Krypt::Asn1::Rb
     end
 
     def encoding
-      StringIO.new.tap do |io|
+      # String.new enforces BINARY encoding
+      StringIO.new(String.new).tap do |io|
         encode_to(io)
       end.string
     end

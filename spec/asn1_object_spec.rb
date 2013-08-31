@@ -38,6 +38,29 @@ describe Krypt::Asn1::Rb::Asn1Object do
         end
 
       end
+    end
+
+    context 'indefinite length' do
+      let(:indef) { true }
+
+      context 'constructed' do
+        let(:cons) { true }
+
+        context ':UNIVERSAL' do
+          let(:tc) { :UNIVERSAL }
+
+          context 'OCTET STRING' do
+            let(:t) { tag::OCTET_STRING }
+            
+            context '07' do
+              let(:v) { "\x04\x01\x07\x00\x00" }
+              its(:encoding) { should eq("\x24\x80\x04\x01\x07\x00\x00") }
+            end
+          end
+
+        end
+
+      end
 
     end
 

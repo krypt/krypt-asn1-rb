@@ -70,6 +70,26 @@ describe Krypt::Asn1::Rb::Tag do
       end
     end
 
+    context ':IMPLICIT' do
+      let(:tc) { :IMPLICIT }
+
+      context '0' do
+        let(:t) { 0 }
+
+        its(:encoding) { should eq("\x80") }
+      end
+    end
+
+    context ':EXPLICIT' do
+      let(:tc) { :EXPLICIT }
+
+      context '0' do
+        let(:t) { 0 }
+
+        its(:encoding) { should eq("\xA0") }
+      end
+    end
+
   end
 end
 

@@ -1,3 +1,5 @@
+# encoding: BINARY
+
 require_relative 'encoder'
 
 module Krypt::Asn1::Rb
@@ -28,7 +30,7 @@ module Krypt::Asn1::Rb
       @length = if options[:indefinite]
         Length.new(indefinite: true)
       else
-        Length.new(length: @value.bytesize)
+        Length.new(length: @value.size)
       end
     end
 

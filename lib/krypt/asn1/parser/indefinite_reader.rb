@@ -65,17 +65,24 @@ module Krypt::Asn1::Rb
 
     def read_header_bytes(bytes, len, next_state)
       available = bytes.size - @header_offset
-
+      
       if len && len < available
-        @header_offset += len
-        to_read = len
+        n_header_bytes(bytes, len)
       else
-        @state = next_state
-        @header_offset = 0
-        to_read = available
+        all_header_bytes(bytes, available, next_state)
       end
+    end
 
-      bytes.slice(@header_offset, to_read)
+    def n_header_bytes(bytes, n)
+      ret = bytes.slice(@header_offset, n)
+      @header_offset += n
+      ret
+    end
+
+    def all_header_bytes(bytes, n, next_state)
+      @state = next_state
+      @header_offset = 0
+      bytes.slice(0, n)
     end
 
     ##
