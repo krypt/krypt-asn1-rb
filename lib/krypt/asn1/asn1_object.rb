@@ -1,3 +1,5 @@
+# encoding: BINARY
+
 require_relative 'io_encodable'
 
 module Krypt::Asn1::Rb
@@ -22,8 +24,7 @@ module Krypt::Asn1::Rb
     end
 
     def encoding
-      # using String.new forces BINARY encoding of the StringIO
-      StringIO.new(String.new).tap do |io|
+      StringIO.new.tap do |io|
         encode_to(io)
       end.string
     end
@@ -37,10 +38,10 @@ module Krypt::Asn1::Rb
     end
 
     def init_length(options)
-      if options[:indefinite]
-        @length = Length.new(indefinite: true)
+      @length = if options[:indefinite]
+        Length.new(indefinite: true)
       else
-        @length = Length.new(length: @value.bytesize)
+        Length.new(length: @value.bytesize)
       end
     end
 

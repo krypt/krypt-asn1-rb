@@ -38,14 +38,15 @@ module Krypt::Asn1::Rb
     end
 
     def len_bytes
-      tmp = @length
-      ary = []
+      return [0] if @length == 0
 
-      while tmp > 0
-        ary << (tmp & 0xff)
-        tmp >>= 8
+      [].tap do |ary|
+        tmp = @length
+        while tmp > 0
+          ary << (tmp & 0xff)
+          tmp >>= 8
+        end
       end
-      ary
     end
 
   end
