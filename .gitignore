@@ -4,6 +4,7 @@ Gemfile.lock
 tmp
 *.swp
 *.swo
+*.swn
 *~
 .rbx/
 .idea/
