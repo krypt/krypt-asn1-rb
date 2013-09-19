@@ -64,7 +64,7 @@ module Krypt::Rb::Asn1
         return c.from_der(der) if c
         fallback.from_der(der)
       else
-        Asn1Data.from_der(der)
+        fallback.from_der(der)
       end
     end
 

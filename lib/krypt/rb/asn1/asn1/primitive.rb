@@ -1,5 +1,60 @@
 module Krypt::Rb::Asn1
-  class Primitive < Asn1
+  class Primitive
+    include IOEncodable
+
+    attr_reader :tag, :tag_class
+
+    def initialize(options)
+      @tag = options[:tag] || default_tag
+      @tag_class = options[:tag_class] || :UNIVERSAL
+      @value = options[:value]
+    end
+
+    def indefinite?; false; end
+
+    def constructed?; false; end
+
+    def value
+      unless defined?(@value)
+        @value = parse_value(@der.value)
+      end
+      @value
+    end
+
+    def encode_to(io)
+      unless defined?(@der) 
+        @der = create_der
+      end
+      @der.encode_to(io)
+    end
+
+    def default_tag
+      raise "No default tag for Primitive class"
+    end
+
+    class << self
+
+      def from_der(der)
+        obj = allocate
+        obj.instance_eval do
+          t = der.tag
+          @tag = t.tag
+          @tag_class = t.tag_class.tag_class
+          @der = der
+        end
+        obj
+      end
+
+    end
+
+    private
+
+    def create_der
+      tag = Der::Tag.new(tag: @tag, tag_class: @tag_class)
+      value = encode_value(@value)
+      length = Der::Length.new(length: value ? value.size : 0)
+      Der.new(tag, length, value)
+    end
 
     def parse_value(bytes)
       bytes

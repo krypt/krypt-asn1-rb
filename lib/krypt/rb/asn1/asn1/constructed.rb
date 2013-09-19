@@ -1,11 +1,67 @@
 # encoding: BINARY
 
 module Krypt::Rb::Asn1
-  class Constructed < Asn1
+  class Constructed
+    include IOEncodable
 
     def initialize(options)
-      super(options)
-      @constructed = true
+      t = options[:tag] || default_tag
+      tc = options[:tag_class] || :UNIVERSAL
+      @tag = Der::Tag.new(tag: t, tag_class: tc, constructed: true)
+      @value = options[:value]
+      @indefinite = !!options[:indefinite]
+    end
+
+    def tag
+      @tag.tag
+    end
+
+    def tag_class
+      @tag.tag_class.tag_class
+    end
+
+    def indefinite?; @indefinite; end
+
+    def constructed?; true; end
+
+    def value
+      unless defined?(@value)
+        @value = parse_value(@der_value)
+        @der_value = nil # erase the cached encoding
+      end
+      @value
+    end
+
+    def encode_to(io)
+      if @der_value
+        encode_cached_to(io)
+      else
+        encode_tlv_to(io)
+      end
+    end
+
+    def default_tag
+      raise "No default tag for Constructed class"
+    end
+
+    class << self
+
+      def from_der(der)
+        obj = allocate
+        obj.instance_eval do
+          @tag = der.tag
+          @length = der.length
+          @indefinite = der.length.indefinite?
+          @der_value = der.value
+        end
+        obj
+      end
+
+    end
+
+    private
+
+    def init_tag(options)
     end
 
     def parse_value(bytes)
@@ -25,19 +81,38 @@ module Krypt::Rb::Asn1
       objects
     end
 
-    def encode_value(values)
-      StringIO.new(String.new).tap do |io|
-        values.each { |v| v.encode_to(io) }
-        if @indefinite
-          add_eoc(values, io)
-        end
-      end.string
+    def encode_cached_to(io)
+      @tag.encode_to(io)
+      @length.encode_to(io)
+      io << @der_value
     end
 
-    private
+    def encode_tlv_to(io)
+      @tag.encode_to(io)
+      if @length
+        @length.encode_to(io)
+        encode_values_to(io)
+      else
+        compute_lv_to(io)
+      end
+    end
 
-    def add_eoc(values, io)
-      last = values.last
+    def compute_lv_to(io)
+      value = StringIO.new(String.new).tap do |io|
+        encode_values_to(io)
+      end.string
+      @length = Der::Length.new(length: value.size, indefinite: @indefinite)
+      @length.encode_to(io)
+      io << value
+    end
+
+    def encode_values_to(io)
+      @value.each { |v| v.encode_to(io) } 
+      add_eoc(io) if @indefinite
+    end
+
+    def add_eoc(io)
+      last = @value.last
       # just add if it was not present in the values
       unless last.tag == Der::Tag::END_OF_CONTENTS && last.tag_class == :UNIVERSAL
         EndOfContents.new.encode_to(io)
