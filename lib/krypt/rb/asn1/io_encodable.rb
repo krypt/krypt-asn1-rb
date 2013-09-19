@@ -9,6 +9,7 @@ module Krypt::Rb::Asn1
         encode_to(io)
       end.string
     end
+    alias :to_der :encoding
 
   end
 end

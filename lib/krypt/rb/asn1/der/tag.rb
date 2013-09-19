@@ -39,8 +39,9 @@ module Krypt::Rb::Asn1
     attr_reader :tag, :tag_class
 
     def initialize(options)
-      @tag = options[:tag] || argument_error('Tag must be provided')
-      @tag_class = Der::TagClass.of(options[:tag_class])
+      @tag = options[:tag]
+      tc = options[:tag_class]
+      @tag_class = tc ? Der::TagClass.of(tc) : Der::TagClass.of(:UNIVERSAL)
       @constructed = !!options[:constructed]
       @encoding = options[:encoding]
     end

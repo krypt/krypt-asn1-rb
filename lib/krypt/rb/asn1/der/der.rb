@@ -7,7 +7,7 @@ module Krypt::Rb::Asn1
     attr_reader :tag, :length, :value
 
     def initialize(options_or_tag, length=nil, value=nil)
-      if options_or_tag.respond_to?(:tag)
+      if length
         @tag = options_or_tag
         @length = length
         @value = value
