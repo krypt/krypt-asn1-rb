@@ -2,11 +2,11 @@
 
 require 'spec_helper'
 
-describe Krypt::Rb::Asn1::Der do
+describe Krypt::Asn1::Der do
 
-  let(:der) { Krypt::Rb::Asn1::Der }
-  let(:tag) { Krypt::Rb::Asn1::Der::Tag }
-  let(:len) { Krypt::Rb::Asn1::Der::Length }
+  let(:der) { Krypt::Asn1::Der }
+  let(:tag) { Krypt::Asn1::Der::Tag }
+  let(:len) { Krypt::Asn1::Der::Length }
 
   describe '#encoding' do
 

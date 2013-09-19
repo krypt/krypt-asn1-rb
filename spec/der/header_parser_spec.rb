@@ -2,11 +2,11 @@
 
 require 'spec_helper'
 
-describe Krypt::Rb::Asn1::Der::HeaderParser do
+describe Krypt::Asn1::Der::HeaderParser do
 
-  let(:hp) { Krypt::Rb::Asn1::Der::HeaderParser }
-  let(:tag) { Krypt::Rb::Asn1::Der::Tag }
-  let(:tag_class) { Krypt::Rb::Asn1::Der::TagClass }
+  let(:hp) { Krypt::Asn1::Der::HeaderParser }
+  let(:tag) { Krypt::Asn1::Der::Tag }
+  let(:tag_class) { Krypt::Asn1::Der::TagClass }
 
   describe '#next' do
 
