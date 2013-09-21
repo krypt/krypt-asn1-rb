@@ -1,21 +1,11 @@
-# encoding: BINARY
+require_relative 'integer_codec'
 
 module Krypt::Asn1
   class Integer < Primitive
+    include IntegerCodec
 
-    def initialize
-      super(options)
-      unless options[:tag]
-        @tag = Der::Tag::INTEGER
-      end
-    end
-    
-    def parse_value(bytes)
-      # TODO
-    end
-
-    def encode_value(value)
-      # TODO
+    def default_tag
+      Der::Tag::INTEGER
     end
 
   end

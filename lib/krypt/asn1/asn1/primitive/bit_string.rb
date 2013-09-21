@@ -3,19 +3,25 @@
 module Krypt::Asn1
   class BitString < Primitive
 
-    def initialize
-      super(options)
-      unless options[:tag]
-        @tag = Der::Tag::BIT_STRING
-      end
-    end
-    
     def parse_value(bytes)
-      # TODO
+      @unused_bits = bytes[0].ord
+      check_unused_bits
+      bytes[1..-1]
     end
 
     def encode_value(value)
-      # TODO
+      check_unused_bits
+      value.prepend(@unused_bits.chr)
+    end
+
+    def default_tag
+      Der::Tag::BIT_STRING
+    end
+
+    def check_unused_bits
+      if @unused_bits < 0 || @unused_bits > 7
+        raise "Unused bits must be 0..7"
+      end
     end
 
   end

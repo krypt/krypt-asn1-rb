@@ -4,18 +4,20 @@ module Krypt::Asn1
   class Null < Primitive
 
     def initialize
-      super(options)
-      unless options[:tag]
-        @tag = Der::Tag::NULL
-      end
+      super(tag: Der::Tag::NULL, tag_class: :UNIVERSAL)
     end
-    
+
     def parse_value(bytes)
-      # TODO
+      raise "NULL must not contain a value: #{bytes}" if bytes
+      nil
     end
 
     def encode_value(value)
-      # TODO
+      nil
+    end
+
+    def default_tag
+      Der::Tag::NULL
     end
 
   end

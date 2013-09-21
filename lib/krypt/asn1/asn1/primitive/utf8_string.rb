@@ -3,19 +3,20 @@
 module Krypt::Asn1
   class Utf8String < Primitive
 
-    def initialize
-      super(options)
-      unless options[:tag]
-        @tag = Der::Tag::UTF8_STRING
-      end
-    end
-    
     def parse_value(bytes)
-      # TODO
+      bytes.dup.force_encoding(Encoding::UTF_8)
     end
 
     def encode_value(value)
-      # TODO
+      if value.encoding.ascii_compatible?
+        value.dup.force_encoding(Encoding::UTF_8)
+      else
+        value.encode(Encoding::UTF_8)
+      end
+    end
+
+    def default_tag
+      Der::Tag::UTF8_STRING
     end
 
   end

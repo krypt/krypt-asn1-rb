@@ -1,23 +1,13 @@
-# encoding: BINARY
+require_relative 'string_codec'
 
 module Krypt::Asn1
   class VideotexString < Primitive
+    include StringCodec
 
-    def initialize
-      super(options)
-      unless options[:tag]
-        @tag = Der::Tag::VIDEOTEX_STRING
-      end
+    def default_tag
+      Der::Tag::VIDEOTEX_STRING
     end
     
-    def parse_value(bytes)
-      # TODO
-    end
-
-    def encode_value(value)
-      # TODO
-    end
-
   end
 end
 

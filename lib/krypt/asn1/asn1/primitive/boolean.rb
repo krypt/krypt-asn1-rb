@@ -8,19 +8,12 @@ module Krypt::Asn1
         raise "Invalid BOOLEAN value: #{bytes}"
       end 
 
-      if bytes == "\x00" 
-        false
-      else
-        true
-      end
+      return false if bytes == "\x00" 
+      true
     end
 
     def encode_value(value)
-      if value
-        "\xff"
-      else
-        "\x00"
-      end
+      value ? "\xff" : "\x00"
     end
 
     def default_tag
