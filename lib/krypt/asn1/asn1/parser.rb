@@ -59,7 +59,7 @@ module Krypt::Asn1
     end
 
     def interpret_with_fallback(tag, tc, der, fallback)
-      if tag < 31 && tc == :UNIVERSAL
+      if tc == :UNIVERSAL
         c = UNIVERSAL_CLASSES[tag]
         return c.from_der(der) if c
         fallback.from_der(der)
