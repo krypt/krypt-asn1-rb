@@ -57,6 +57,10 @@ module Krypt::Asn1
         obj
       end
 
+      def of(value)
+        new(value: value)
+      end
+
     end
 
     private
