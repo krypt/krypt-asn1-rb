@@ -5,9 +5,11 @@ module Krypt::Asn1
     attr_reader :tag, :tag_class
 
     def initialize(options)
-      @tag = options[:tag] || default_tag
-      @tag_class = options[:tag_class] || :UNIVERSAL
-      @value = options[:value]
+      if options.respond_to?(:has_key)
+        init_hash(options)
+      else
+        init_value(options)
+      end
     end
 
     def indefinite?; false; end
@@ -52,6 +54,18 @@ module Krypt::Asn1
     end
 
     private
+
+    def init_hash(options)
+      @tag = options[:tag] || default_tag
+      @tag_class = options[:tag_class] || :UNIVERSAL
+      @value = options[:value]
+    end
+
+    def init_value(value)
+      @tag = default_tag
+      @tag_class = :UNIVERSAL
+      @value = value
+    end
 
     def create_der
       tag = Der::Tag.new(tag: @tag, tag_class: @tag_class)

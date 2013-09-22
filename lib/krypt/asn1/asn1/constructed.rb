@@ -5,11 +5,11 @@ module Krypt::Asn1
     include IOEncodable
 
     def initialize(options)
-      t = options[:tag] || default_tag
-      tc = options[:tag_class] || :UNIVERSAL
-      @tag = Der::Tag.new(tag: t, tag_class: tc, constructed: true)
-      @value = options[:value]
-      @indefinite = !!options[:indefinite]
+      if options.respond_to?(:has_key)
+        init_hash(options)
+      else
+        init_value(options)
+      end
     end
 
     def tag
@@ -57,15 +57,21 @@ module Krypt::Asn1
         obj
       end
 
-      def of(value)
-        new(value: value)
-      end
-
     end
 
     private
 
-    def init_tag(options)
+    def init_hash(options)
+      t = options[:tag] || default_tag
+      tc = options[:tag_class] || :UNIVERSAL
+      @tag = Der::Tag.new(tag: t, tag_class: tc, constructed: true)
+      @value = options[:value]
+      @indefinite = !!options[:indefinite]
+    end
+
+    def init_value(value)
+      @value = value
+      @tag = Der::Tag.new(tag: default_tag, tag_class: :UNIVERSAL, constructed: true)
     end
 
     def parse_value(bytes)
