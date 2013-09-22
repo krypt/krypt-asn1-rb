@@ -1,23 +1,20 @@
-# encoding: BINARY
+require 'time'
 
 module Krypt::Asn1
   class GeneralizedTime < Primitive
 
-    def initialize
-      super(options)
-      unless options[:tag]
-        @tag = Der::Tag::GENERALIZED_TIME
-      end
-    end
-    
     def parse_value(bytes)
-      # TODO
+      DateTime.strptime(value, "%Y%m%d%H%M%S%Z")
     end
 
     def encode_value(value)
-      # TODO
+      value.to_time.utc.strftime("%Y%m%d%H%M%SZ")
     end
 
+    def default_tag
+      Der::Tag::GENERALIZED_TIME
+    end
+    
   end
 end
 

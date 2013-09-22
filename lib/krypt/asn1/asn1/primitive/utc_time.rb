@@ -1,21 +1,20 @@
-# encoding: BINARY
+require 'time'
 
 module Krypt::Asn1
   class UtcTime < Primitive
 
-    def initialize
-      super(options)
-      unless options[:tag]
-        @tag = Der::Tag::UTC_TIME
-      end
-    end
-    
     def parse_value(bytes)
-      # TODO
+      DateTime.strptime(value, "%y%m%d%H%M%SZ") do |y|
+        y < 50 ? y + 2000 : y + 1900
+      end
     end
 
     def encode_value(value)
-      # TODO
+      value.to_time.utc.strftime("%Y%m%d%H%M%SZ")
+    end
+
+    def default_tag
+      Der::Tag::UTC_TIME
     end
 
   end
