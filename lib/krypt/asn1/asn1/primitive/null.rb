@@ -17,7 +17,7 @@ module Krypt::Asn1
     end
 
     def default_tag
-      Asn1::NULL
+      NULL
     end
 
   end

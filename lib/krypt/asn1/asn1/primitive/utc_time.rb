@@ -14,7 +14,7 @@ module Krypt::Asn1
     end
 
     def default_tag
-      Asn1::UTC_TIME
+      UTC_TIME
     end
 
   end

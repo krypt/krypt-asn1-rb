@@ -1,8 +1,7 @@
 # encoding: BINARY
 
 module Krypt::Asn1
-  class Constructed
-    include IOEncodable
+  class Constructed < Asn1Base
 
     def initialize(options)
       if options.respond_to?(:has_key)

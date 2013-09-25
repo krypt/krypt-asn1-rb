@@ -5,7 +5,7 @@ module Krypt::Asn1
     include StringCodec
 
     def default_tag
-      Der::Tag::PRINTABLE_STRING
+      PRINTABLE_STRING
     end
     
   end

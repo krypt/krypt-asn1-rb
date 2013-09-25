@@ -1,6 +1,5 @@
 module Krypt::Asn1
-  class Primitive
-    include IOEncodable
+  class Primitive < Asn1Base
 
     attr_reader :tag, :tag_class
 

@@ -15,7 +15,7 @@ module Krypt::Asn1
     end
 
     def default_tag
-      Asn1::BIT_STRING
+      BIT_STRING
     end
 
     def check_unused_bits

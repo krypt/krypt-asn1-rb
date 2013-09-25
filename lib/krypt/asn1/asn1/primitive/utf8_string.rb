@@ -16,7 +16,7 @@ module Krypt::Asn1
     end
 
     def default_tag
-      Asn1::UTF8_STRING
+      UTF8_STRING
     end
 
   end
