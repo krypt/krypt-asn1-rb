@@ -78,7 +78,7 @@ describe "Asn1 object equality" do
       end
 
       context "when created from scratch with equal content, but one is indefinite" do
-        let(:a) { tmp = asn::Sequence.new(indefinite: true, value: [asn::Boolean.new(true)]); p tmp; tmp }
+        let(:a) { asn::Sequence.new(indefinite: true, value: [asn::Boolean.new(true)]) }
         let(:b) { asn::Sequence.new([asn::Boolean.new(true)]) }
         it { should be_false }
         specify "the encoding of its value is the same" do
