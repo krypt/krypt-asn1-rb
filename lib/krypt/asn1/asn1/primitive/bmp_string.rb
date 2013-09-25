@@ -5,7 +5,7 @@ module Krypt::Asn1
     include StringCodec
 
     def default_tag
-      Der::Tag::BMP_STRING
+      Asn1::BMP_STRING
     end
     
   end

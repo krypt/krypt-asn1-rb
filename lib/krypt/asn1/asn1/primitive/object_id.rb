@@ -22,7 +22,7 @@ module Krypt::Asn1
     end
 
     def default_tag
-      Der::Tag::OBJECT_ID
+      Asn1::OBJECT_ID
     end
 
     private

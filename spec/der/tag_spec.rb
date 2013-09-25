@@ -14,7 +14,7 @@ describe Krypt::Asn1::Der::Tag do
       let(:tc) { :UNIVERSAL }
 
       context 'NULL' do
-        let(:t) { tag::NULL }
+        let(:t) { Krypt::Asn1::NULL }
 
         specify '05' do
           expect(subject.encoding).to eq("\x05")
@@ -26,7 +26,7 @@ describe Krypt::Asn1::Der::Tag do
       let(:tc) { :APPLICATION }
 
       context 'NULL' do
-        let(:t) { tag::NULL }
+        let(:t) { Krypt::Asn1::NULL }
 
         its(:encoding) { should eq("\x45") }
       end
@@ -36,7 +36,7 @@ describe Krypt::Asn1::Der::Tag do
       let(:tc) { :CONTEXT_SPECIFIC }
 
       context 'NULL' do
-        let(:t) { tag::NULL }
+        let(:t) { Krypt::Asn1::NULL }
 
         its(:encoding) { should eq("\x85") }
       end
@@ -46,7 +46,7 @@ describe Krypt::Asn1::Der::Tag do
       let(:tc) { :PRIVATE }
 
       context 'NULL' do
-        let(:t) { tag::NULL }
+        let(:t) { Krypt::Asn1::NULL }
 
         its(:encoding) { should eq("\xC5") }
       end
@@ -67,26 +67,6 @@ describe Krypt::Asn1::Der::Tag do
         let(:t) { 100_000 }
 
         its(:encoding) { should eq("\xDF\x86\x8D\x20") }
-      end
-    end
-
-    context ':IMPLICIT' do
-      let(:tc) { :IMPLICIT }
-
-      context '0' do
-        let(:t) { 0 }
-
-        its(:encoding) { should eq("\x80") }
-      end
-    end
-
-    context ':EXPLICIT' do
-      let(:tc) { :EXPLICIT }
-
-      context '0' do
-        let(:t) { 0 }
-
-        its(:encoding) { should eq("\xA0") }
       end
     end
 

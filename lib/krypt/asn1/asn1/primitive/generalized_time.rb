@@ -12,7 +12,7 @@ module Krypt::Asn1
     end
 
     def default_tag
-      Der::Tag::GENERALIZED_TIME
+      Asn1::GENERALIZED_TIME
     end
     
   end

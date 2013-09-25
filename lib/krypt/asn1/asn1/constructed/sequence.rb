@@ -2,7 +2,7 @@ module Krypt::Asn1
   class Sequence < Constructed
 
     def default_tag
-      Der::Tag::SEQUENCE
+      Asn1::SEQUENCE
     end
     
   end

@@ -22,7 +22,7 @@ describe Krypt::Asn1::Der do
           let(:tc) { :UNIVERSAL }
 
           context 'INTEGER' do
-            let(:t) { tag::INTEGER }
+            let(:t) { Krypt::Asn1::INTEGER }
             
             context '0' do
               let(:v) { "\x00" }
@@ -50,7 +50,7 @@ describe Krypt::Asn1::Der do
           let(:tc) { :UNIVERSAL }
 
           context 'OCTET STRING' do
-            let(:t) { tag::OCTET_STRING }
+            let(:t) { Krypt::Asn1::OCTET_STRING }
             
             context '07' do
               let(:v) { "\x04\x01\x07\x00\x00" }

@@ -4,7 +4,7 @@ module Krypt::Asn1
   class Null < Primitive
 
     def initialize
-      super(tag: Der::Tag::NULL, tag_class: :UNIVERSAL)
+      super(tag: Asn1::NULL, tag_class: :UNIVERSAL)
     end
 
     def parse_value(bytes)
@@ -17,7 +17,7 @@ module Krypt::Asn1
     end
 
     def default_tag
-      Der::Tag::NULL
+      Asn1::NULL
     end
 
   end

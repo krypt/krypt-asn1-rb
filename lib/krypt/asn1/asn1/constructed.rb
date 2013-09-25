@@ -124,7 +124,7 @@ module Krypt::Asn1
     def add_eoc(io)
       last = @value.last
       # just add if it was not present in the values
-      unless last.tag == Der::Tag::END_OF_CONTENTS && last.tag_class == :UNIVERSAL
+      unless last.tag == Asn1::END_OF_CONTENTS && last.tag_class == :UNIVERSAL
         EndOfContents.new.encode_to(io)
       end
     end

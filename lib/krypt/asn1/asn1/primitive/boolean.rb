@@ -17,7 +17,7 @@ module Krypt::Asn1
     end
 
     def default_tag
-      Der::Tag::BOOLEAN
+      Asn1::BOOLEAN
     end
 
   end

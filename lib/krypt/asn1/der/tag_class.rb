@@ -38,11 +38,7 @@ module Krypt::Asn1
       private
 
       def determine_mask(tc)
-        if tc == :IMPLICIT || tc == :EXPLICIT
-          CONTEXT_SPECIFIC
-        else
-          const_get(tc)
-        end
+        const_get(tc)
       end
 
     end

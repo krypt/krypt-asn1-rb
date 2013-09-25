@@ -5,7 +5,7 @@ module Krypt::Asn1
     include IntegerCodec
 
     def default_tag
-      Der::Tag::INTEGER
+      Asn1::INTEGER
     end
 
   end

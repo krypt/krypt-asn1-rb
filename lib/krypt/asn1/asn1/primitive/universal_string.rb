@@ -5,7 +5,7 @@ module Krypt::Asn1
     include StringCodec
 
     def default_tag
-      Der::Tag::UNIVERSAL_STRING
+      Asn1::UNIVERSAL_STRING
     end
     
   end

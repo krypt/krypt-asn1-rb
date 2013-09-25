@@ -6,7 +6,7 @@ module Krypt::Asn1
     end
 
     def default_tag
-      Der::Tag::SEQUENCE
+      Asn1::SEQUENCE
     end
     
   end

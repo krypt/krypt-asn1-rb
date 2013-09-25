@@ -20,7 +20,7 @@ describe Krypt::Asn1::Der::HeaderParser do
           context 'tag' do
             subject { hp.new(enc).next.asn1_object.tag }
 
-            its(:tag) { should eq(tag::INTEGER) }
+            its(:tag) { should eq(Krypt::Asn1::INTEGER) }
             its(:constructed?) { should be_false }
             its(:encoding) { should eq("\x02") }
           end
@@ -53,7 +53,7 @@ describe Krypt::Asn1::Der::HeaderParser do
           context 'tag' do
             subject { hp.new(enc).next.asn1_object.tag }
 
-            its(:tag) { should eq(tag::OCTET_STRING) }
+            its(:tag) { should eq(Krypt::Asn1::OCTET_STRING) }
             its(:constructed?) { should be_false }
             its(:encoding) { should eq("\x04") }
           end
@@ -204,7 +204,7 @@ describe Krypt::Asn1::Der::HeaderParser do
         context 'tag' do
           subject { hp.new(enc).next.asn1_object.tag }
 
-          its(:tag) { should eq(tag::OCTET_STRING) }
+          its(:tag) { should eq(Krypt::Asn1::OCTET_STRING) }
           its(:constructed?) { should be_true }
           its(:encoding) { should eq("\x24") }
         end
@@ -243,7 +243,7 @@ describe Krypt::Asn1::Der::HeaderParser do
       context 'tag' do
         subject { hp.new(enc).next.asn1_object.tag }
 
-        its(:tag) { should eq(tag::BOOLEAN) }
+        its(:tag) { should eq(Krypt::Asn1::BOOLEAN) }
         its(:constructed?) { should be_false }
         its(:encoding) { should eq("\x01") }
       end
