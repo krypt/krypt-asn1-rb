@@ -4,7 +4,7 @@ module Krypt::Asn1
     attr_reader :tag, :tag_class
 
     def initialize(options)
-      if options.respond_to?(:has_key)
+      if options.respond_to?(:has_key?)
         init_hash(options)
       else
         init_value(options)

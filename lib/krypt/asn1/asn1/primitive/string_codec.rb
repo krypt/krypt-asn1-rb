@@ -8,7 +8,7 @@ module Krypt::Asn1
     def encode_value(value)
       enc = value.encoding
       if enc == Encoding::BINARY
-        enc.dup
+        value.dup
       else
         encode(value)
       end

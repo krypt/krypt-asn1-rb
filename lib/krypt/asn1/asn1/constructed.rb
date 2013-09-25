@@ -4,7 +4,7 @@ module Krypt::Asn1
   class Constructed < Asn1Base
 
     def initialize(options)
-      if options.respond_to?(:has_key)
+      if options.respond_to?(:has_key?)
         init_hash(options)
       else
         init_value(options)
@@ -123,7 +123,7 @@ module Krypt::Asn1
     def add_eoc(io)
       last = @value.last
       # just add if it was not present in the values
-      unless last.tag == Asn1::END_OF_CONTENTS && last.tag_class == :UNIVERSAL
+      unless last.tag == END_OF_CONTENTS && last.tag_class == :UNIVERSAL
         EndOfContents.new.encode_to(io)
       end
     end
