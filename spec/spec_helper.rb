@@ -6,4 +6,10 @@ elsif ENV['TRAVIS']
   Coveralls.wear!
 end
 
+RSpec.configure do |config|
+  config.color = true
+  config.tty = true
+  config.formatter = :documentation
+end
+
 require 'krypt/asn1'

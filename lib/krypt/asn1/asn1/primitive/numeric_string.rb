@@ -4,10 +4,10 @@ module Krypt::Asn1
   class NumericString < Primitive
     include StringCodec
 
-    def default_tag
+    def self.default_tag
       NUMERIC_STRING
     end
-    
+
   end
 end
 

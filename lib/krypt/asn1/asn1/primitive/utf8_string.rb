@@ -3,6 +3,10 @@
 module Krypt::Asn1
   class Utf8String < Primitive
 
+    def self.default_tag
+      UTF8_STRING
+    end
+
     def parse_value(bytes)
       bytes.dup.force_encoding(Encoding::UTF_8)
     end
@@ -13,10 +17,6 @@ module Krypt::Asn1
       else
         value.encode(Encoding::UTF_8)
       end
-    end
-
-    def default_tag
-      UTF8_STRING
     end
 
   end

@@ -4,10 +4,10 @@ module Krypt::Asn1
   class T61String < Primitive
     include StringCodec
 
-    def default_tag
+    def self.default_tag
       T61_STRING
     end
-    
+
   end
 end
 

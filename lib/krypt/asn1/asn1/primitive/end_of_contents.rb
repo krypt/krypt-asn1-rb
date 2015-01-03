@@ -3,10 +3,14 @@
 module Krypt::Asn1
   class EndOfContents < Primitive
 
-    def initialize
-      super(tag: END_OF_CONTENTS, tag_class: :UNIVERSAL)
+    def self.default_tag
+      END_OF_CONTENTS
     end
-    
+
+    def initialize
+      super(nil, tag: END_OF_CONTENTS, tag_class: :UNIVERSAL)
+    end
+
     def parse_value(bytes)
       nil
     end

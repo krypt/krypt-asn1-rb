@@ -2,7 +2,7 @@
 
 require 'spec_helper'
 
-describe Krypt::Asn1::Der::HeaderParser do
+RSpec.describe Krypt::Asn1::Der::HeaderParser do
 
   let(:hp) { Krypt::Asn1::Der::HeaderParser }
   let(:tag) { Krypt::Asn1::Der::Tag }
@@ -20,30 +20,46 @@ describe Krypt::Asn1::Der::HeaderParser do
           context 'tag' do
             subject { hp.new(enc).next.asn1_object.tag }
 
-            its(:tag) { should eq(Krypt::Asn1::INTEGER) }
-            its(:constructed?) { should be_false }
-            its(:encoding) { should eq("\x02") }
+            it "has an INTEGER tag" do
+              expect(subject.tag).to eq(Krypt::Asn1::INTEGER)
+            end
+            it "is primitive" do
+              expect(subject.constructed?).to eq(false)
+            end
+            it 'encodes to \x02' do
+              expect(subject.encoding).to eq("\x02")
+            end
           end
 
           context 'tag_class' do
             subject { hp.new(enc).next.asn1_object.tag.tag_class }
 
-            its(:tag_class) { should eq(:UNIVERSAL) }
-            its(:mask) { should eq(tag_class::UNIVERSAL) }
+            it "has UNIVERSAL tag class" do
+              expect(subject.tag_class).to eq(:UNIVERSAL)
+            end
+            it "has UNIVERSAL mask" do
+              expect(subject.mask).to eq(tag_class::UNIVERSAL)
+            end
           end
 
           context 'length' do
             subject { hp.new(enc).next.asn1_object.length }
 
-            its(:length) { should eq(1) }
-            its(:indefinite?) { should be_false }
-            its(:encoding) { should eq("\x01") }
+            it "has length 1" do
+              expect(subject.length).to eq(1)
+            end
+            it "is definite" do
+              expect(subject.indefinite?).to eq(false)
+            end
+            it 'encodes to \x01' do
+              expect(subject.encoding).to eq("\x01")
+            end
           end
 
           context 'value' do
             subject { hp.new(enc).next.asn1_object.value }
 
-            it { should eq("\x2A") }
+            it { is_expected.to eq("\x2A") }
           end
         end
 
@@ -53,30 +69,46 @@ describe Krypt::Asn1::Der::HeaderParser do
           context 'tag' do
             subject { hp.new(enc).next.asn1_object.tag }
 
-            its(:tag) { should eq(Krypt::Asn1::OCTET_STRING) }
-            its(:constructed?) { should be_false }
-            its(:encoding) { should eq("\x04") }
+            it "has an OCTET_STRING tag" do
+              expect(subject.tag).to eq(Krypt::Asn1::OCTET_STRING)
+            end
+            it "is primitive" do
+              expect(subject.constructed?).to eq(false)
+            end
+            it 'encodes to \x04' do
+              expect(subject.encoding).to eq("\x04")
+            end
           end
 
           context 'tag_class' do
             subject { hp.new(enc).next.asn1_object.tag.tag_class }
 
-            its(:tag_class) { should eq(:UNIVERSAL) }
-            its(:mask) { should eq(tag_class::UNIVERSAL) }
+            it "has UNIVERSAL tag class" do
+              expect(subject.tag_class).to eq(:UNIVERSAL)
+            end
+            it "has UNIVERSAL mask" do
+              expect(subject.mask).to eq(tag_class::UNIVERSAL)
+            end
           end
 
           context 'length' do
             subject { hp.new(enc).next.asn1_object.length }
 
-            its(:length) { should eq(256) }
-            its(:indefinite?) { should be_false }
-            its(:encoding) { should eq("\x82\x01\x00") }
+            it "has length 256" do
+              expect(subject.length).to eq(256)
+            end
+            it "is definite" do
+              expect(subject.indefinite?).to eq(false)
+            end
+            it 'encodes to \x82\x01\x00' do
+              expect(subject.encoding).to eq("\x82\x01\x00")
+            end
           end
 
           context 'value' do
             subject { hp.new(enc).next.asn1_object.value }
 
-            it { should eq("\xFF" * 256) }
+            it { is_expected.to eq("\xFF" * 256) }
           end
         end
 
@@ -86,30 +118,46 @@ describe Krypt::Asn1::Der::HeaderParser do
           context 'tag' do
             subject { hp.new(enc).next.asn1_object.tag }
 
-            its(:tag) { should eq(150) }
-            its(:constructed?) { should be_false }
-            its(:encoding) { should eq("\xDF\x81\x16") }
+            it "has a tag of 150" do
+              expect(subject.tag).to eq(150)
+            end
+            it "is primitive" do
+              expect(subject.constructed?).to eq(false)
+            end
+            it 'encodes to \xDF\x81\x16' do
+              expect(subject.encoding).to eq("\xDF\x81\x16")
+            end
           end
 
           context 'tag_class' do
             subject { hp.new(enc).next.asn1_object.tag.tag_class }
 
-            its(:tag_class) { should eq(:PRIVATE) }
-            its(:mask) { should eq(tag_class::PRIVATE) }
+            it "has PRIVATE tag class" do
+              expect(subject.tag_class).to eq(:PRIVATE)
+            end
+            it "has PRIVATE mask" do
+              expect(subject.mask).to eq(tag_class::PRIVATE)
+            end
           end
 
           context 'length' do
             subject { hp.new(enc).next.asn1_object.length }
 
-            its(:length) { should eq(1) }
-            its(:indefinite?) { should be_false }
-            its(:encoding) { should eq("\x01") }
+            it "has length 1" do
+              expect(subject.length).to eq(1)
+            end
+            it "is definite" do
+              expect(subject.indefinite?).to eq(false)
+            end
+            it 'encodes to \x01' do
+              expect(subject.encoding).to eq("\x01")
+            end
           end
 
           context 'value' do
             subject { hp.new(enc).next.asn1_object.value }
 
-            it { should eq("\x01") }
+            it { is_expected.to eq("\x01") }
           end
         end
 
@@ -119,16 +167,26 @@ describe Krypt::Asn1::Der::HeaderParser do
           context 'tag' do
             subject { hp.new(enc).next.asn1_object.tag }
 
-            its(:tag) { should eq(0) }
-            its(:constructed?) { should be_false }
-            its(:encoding) { should eq("\x80") }
+            it "has a tag of 0" do
+              expect(subject.tag).to eq(0)
+            end
+            it "is primitive" do
+              expect(subject.constructed?).to eq(false)
+            end
+            it 'encodes to \x80' do
+              expect(subject.encoding).to eq("\x80")
+            end
           end
 
           context 'tag_class' do
             subject { hp.new(enc).next.asn1_object.tag.tag_class }
 
-            its(:tag_class) { should eq(:CONTEXT_SPECIFIC) }
-            its(:mask) { should eq(tag_class::CONTEXT_SPECIFIC) }
+            it "has CONTEXT_SPECIFIC tag class" do
+              expect(subject.tag_class).to eq(:CONTEXT_SPECIFIC)
+            end
+            it "has CONTEXT_SPECIFIC mask" do
+              expect(subject.mask).to eq(tag_class::CONTEXT_SPECIFIC)
+            end
           end
         end
 
@@ -138,16 +196,26 @@ describe Krypt::Asn1::Der::HeaderParser do
           context 'tag' do
             subject { hp.new(enc).next.asn1_object.tag }
 
-            its(:tag) { should eq(0) }
-            its(:constructed?) { should be_true }
-            its(:encoding) { should eq("\xA0") }
+            it "has a tag of 0" do
+              expect(subject.tag).to eq(0)
+            end
+            it "is constructed" do
+              expect(subject.constructed?).to eq(true)
+            end
+            it 'encodes to \xA0' do
+              expect(subject.encoding).to eq("\xA0")
+            end
           end
 
           context 'tag_class' do
             subject { hp.new(enc).next.asn1_object.tag.tag_class }
 
-            its(:tag_class) { should eq(:CONTEXT_SPECIFIC) }
-            its(:mask) { should eq(tag_class::CONTEXT_SPECIFIC) }
+            it "has CONTEXT_SPECIFIC tag class" do
+              expect(subject.tag_class).to eq(:CONTEXT_SPECIFIC)
+            end
+            it "has CONTEXT_SPECIFIC mask" do
+              expect(subject.mask).to eq(tag_class::CONTEXT_SPECIFIC)
+            end
           end
         end
 
@@ -157,16 +225,26 @@ describe Krypt::Asn1::Der::HeaderParser do
           context 'tag' do
             subject { hp.new(enc).next.asn1_object.tag }
 
-            its(:tag) { should eq(0) }
-            its(:constructed?) { should be_false }
-            its(:encoding) { should eq("\x40") }
+            it "has a tag of 0" do
+              expect(subject.tag).to eq(0)
+            end
+            it "is primitive" do
+              expect(subject.constructed?).to eq(false)
+            end
+            it 'encodes to \x40' do
+              expect(subject.encoding).to eq("\x40")
+            end
           end
 
           context 'tag_class' do
             subject { hp.new(enc).next.asn1_object.tag.tag_class }
 
-            its(:tag_class) { should eq(:APPLICATION) }
-            its(:mask) { should eq(tag_class::APPLICATION) }
+            it "has APPLICATION tag class" do
+              expect(subject.tag_class).to eq(:APPLICATION)
+            end
+            it "has APPLICATION mask" do
+              expect(subject.mask).to eq(tag_class::APPLICATION)
+            end
           end
         end
 
@@ -176,16 +254,26 @@ describe Krypt::Asn1::Der::HeaderParser do
           context 'tag' do
             subject { hp.new(enc).next.asn1_object.tag }
 
-            its(:tag) { should eq(0) }
-            its(:constructed?) { should be_false }
-            its(:encoding) { should eq("\xC0") }
+            it "has a tag of 0" do
+              expect(subject.tag).to eq(0)
+            end
+            it "is primitive" do
+              expect(subject.constructed?).to eq(false)
+            end
+            it 'encodes to \xC0' do
+              expect(subject.encoding).to eq("\xC0")
+            end
           end
 
           context 'tag_class' do
             subject { hp.new(enc).next.asn1_object.tag.tag_class }
 
-            its(:tag_class) { should eq(:PRIVATE) }
-            its(:mask) { should eq(tag_class::PRIVATE) }
+            it "has PRIVATE tag class" do
+              expect(subject.tag_class).to eq(:PRIVATE)
+            end
+            it "has PRIVATE mask" do
+              expect(subject.mask).to eq(tag_class::PRIVATE)
+            end
           end
         end
       end
@@ -204,30 +292,46 @@ describe Krypt::Asn1::Der::HeaderParser do
         context 'tag' do
           subject { hp.new(enc).next.asn1_object.tag }
 
-          its(:tag) { should eq(Krypt::Asn1::OCTET_STRING) }
-          its(:constructed?) { should be_true }
-          its(:encoding) { should eq("\x24") }
+          it "has OCTET_STRING tag" do
+            expect(subject.tag).to eq(Krypt::Asn1::OCTET_STRING)
+          end
+          it "is constructed" do
+            expect(subject.constructed?).to eq(true)
+          end
+          it 'encodes to \x24' do
+            expect(subject.encoding).to eq("\x24")
+          end
         end
 
         context 'tag_class' do
           subject { hp.new(enc).next.asn1_object.tag.tag_class }
 
-          its(:tag_class) { should eq(:UNIVERSAL) }
-          its(:mask) { should eq(tag_class::UNIVERSAL) }
+          it "has UNIVERSAL tag class" do
+            expect(subject.tag_class).to eq(:UNIVERSAL)
+          end
+          it "has UNIVERSAL mask" do
+            expect(subject.mask).to eq(tag_class::UNIVERSAL)
+          end
         end
 
         context 'length' do
           subject { hp.new(enc).next.asn1_object.length }
 
-          its(:length) { should be_nil }
-          its(:indefinite?) { should be_true }
-          its(:encoding) { should eq("\x80") }
+          it "has length of nil" do
+            expect(subject.length).to be_nil
+          end
+          it "is indefinite" do
+            expect(subject.indefinite?).to eq(true)
+          end
+          it 'encodes to \x80' do
+            expect(subject.encoding).to eq("\x80")
+          end
         end
 
         context 'value' do
           subject { hp.new(enc).next.asn1_object.value }
 
-          it { should eq("\x04\x01\x01\x04\x01\x02\x00\x00") }
+          it { is_expected.to eq("\x04\x01\x01\x04\x01\x02\x00\x00") }
         end
       end
 
@@ -243,30 +347,46 @@ describe Krypt::Asn1::Der::HeaderParser do
       context 'tag' do
         subject { hp.new(enc).next.asn1_object.tag }
 
-        its(:tag) { should eq(Krypt::Asn1::BOOLEAN) }
-        its(:constructed?) { should be_false }
-        its(:encoding) { should eq("\x01") }
+        it "has BOOLEAN tag" do
+          expect(subject.tag).to eq(Krypt::Asn1::BOOLEAN)
+        end
+        it "is primitive" do
+          expect(subject.constructed?).to eq(false)
+        end
+        it 'encodes to \x01' do
+          expect(subject.encoding).to eq("\x01")
+        end
       end
 
       context 'tag_class' do
         subject { hp.new(enc).next.asn1_object.tag.tag_class }
 
-        its(:tag_class) { should eq(:UNIVERSAL) }
-        its(:mask) { should eq(tag_class::UNIVERSAL) }
+        it "has UNIVERSAL tag class" do
+          expect(subject.tag_class).to eq(:UNIVERSAL)
+        end
+        it "has UNIVERSAL mask" do
+          expect(subject.mask).to eq(tag_class::UNIVERSAL)
+        end
       end
 
       context 'length' do
         subject { hp.new(enc).next.asn1_object.length }
 
-        its(:length) { should eq(1) }
-        its(:indefinite?) { should be_false }
-        its(:encoding) { should eq("\x01") }
+        it "has length 1" do
+          expect(subject.length).to eq(1)
+        end
+        it "is definite" do
+          expect(subject.indefinite?).to eq(false)
+        end
+        it 'encodes to \x01' do
+          expect(subject.encoding).to eq("\x01")
+        end
       end
 
       context 'value' do
         subject { hp.new(enc).next.asn1_object.value }
 
-        it { should eq("\xFF") }
+        it { is_expected.to eq("\xFF") }
       end
     end
 
@@ -291,16 +411,16 @@ describe Krypt::Asn1::Der::HeaderParser do
       let(:der) { "\x01\x01\xFF" }
       let(:buf) { "" }
 
-      it { should eq("\xFF") }
-      it { should be(buf) }
+      it { is_expected.to eq("\xFF") }
+      it { is_expected.to eq(buf) }
     end
 
     context 'indefinite length' do
       let(:der) { "\x24\x80\x04\x01\x01\x00\x00" }
       let(:buf) { "" }
 
-      it { should eq("\x04\x01\x01\x00\x00") }
-      it { should be(buf) }
+      it { is_expected.to eq("\x04\x01\x01\x00\x00") }
+      it { is_expected.to eq(buf) }
     end
 
     context 'byte by byte' do
@@ -309,13 +429,13 @@ describe Krypt::Asn1::Der::HeaderParser do
       context 'definite length' do
         let(:der) { "\x02\x02\xFF\x00" }
 
-        it { should eq("\xFF") }
+        it { is_expected.to eq("\xFF") }
       end
 
       context 'indefinite length' do
         let(:der) { "\x24\x80\xDF\x81\x16\x01\x01\x00\x00" }
 
-        it { should eq("\xDF") }
+        it { is_expected.to eq("\xDF") }
       end
     end
   end

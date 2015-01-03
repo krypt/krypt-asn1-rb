@@ -3,6 +3,15 @@
 module Krypt::Asn1
   class BitString < Primitive
 
+    def self.default_tag
+      BIT_STRING
+    end
+
+    def initialize(value, options={})
+      super
+      @unused_bits = options[:unused_bits] || 0
+    end
+
     def parse_value(bytes)
       @unused_bits = bytes[0].ord
       check_unused_bits
@@ -12,10 +21,6 @@ module Krypt::Asn1
     def encode_value(value)
       check_unused_bits
       value.prepend(@unused_bits.chr)
-    end
-
-    def default_tag
-      BIT_STRING
     end
 
     def check_unused_bits

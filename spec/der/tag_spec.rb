@@ -16,7 +16,7 @@ describe Krypt::Asn1::Der::Tag do
       context 'NULL' do
         let(:t) { Krypt::Asn1::NULL }
 
-        specify '05' do
+        it 'encodes to \x05' do
           expect(subject.encoding).to eq("\x05")
         end
       end
@@ -28,7 +28,9 @@ describe Krypt::Asn1::Der::Tag do
       context 'NULL' do
         let(:t) { Krypt::Asn1::NULL }
 
-        its(:encoding) { should eq("\x45") }
+        it 'encodes to \x45' do
+          expect(subject.encoding).to eq("\x45")
+        end
       end
     end
 
@@ -38,7 +40,9 @@ describe Krypt::Asn1::Der::Tag do
       context 'NULL' do
         let(:t) { Krypt::Asn1::NULL }
 
-        its(:encoding) { should eq("\x85") }
+        it 'encodes to \x85' do
+          expect(subject.encoding).to eq("\x85")
+        end
       end
     end
 
@@ -48,25 +52,33 @@ describe Krypt::Asn1::Der::Tag do
       context 'NULL' do
         let(:t) { Krypt::Asn1::NULL }
 
-        its(:encoding) { should eq("\xC5") }
+        it 'encodes to \xC5' do
+          expect(subject.encoding).to eq("\xC5")
+        end
       end
 
       context 'tag > 31 single byte: 32' do
         let(:t) { 32 }
 
-        its(:encoding) { should eq("\xDF\x20") }
+        it 'encodes to \xDF\x20' do
+          expect(subject.encoding).to eq("\xDF\x20")
+        end
       end
 
       context 'tag > 31 two bytes 150' do
         let(:t) { 150 }
 
-        its(:encoding) { should eq("\xDF\x81\x16") }
+        it 'encodes to \xDF\x81\x16' do
+          expect(subject.encoding).to eq("\xDF\x81\x16")
+        end
       end
 
       context 'tag > 31 three bytes 100.000' do
         let(:t) { 100_000 }
 
-        its(:encoding) { should eq("\xDF\x86\x8D\x20") }
+        it 'encodes to \xDF\x86\x8D\x20' do
+          expect(subject.encoding).to eq("\xDF\x86\x8D\x20")
+        end
       end
     end
 

@@ -29,7 +29,7 @@ module Krypt::Asn1
       to_read = len
       while total != len && @state != :done
         s = send(@state, to_read)
-        if s 
+        if s
           buf << s
           size = s.size
           total += size
@@ -65,7 +65,7 @@ module Krypt::Asn1
 
     def read_header_bytes(bytes, len, next_state)
       available = bytes.size - @header_offset
-      
+
       if len && len < available
         n_header_bytes(bytes, len)
       else
@@ -90,8 +90,8 @@ module Krypt::Asn1
     # been consumed. As an EOC contains no value, we are done
     def check_done
       tag = @current_header.tag
-      if (tag.tag == 0x00 && 
-          tag.tag_class.mask == 0x00 && 
+      if (tag.tag == 0x00 &&
+          tag.tag_class.mask == 0x00 &&
           @state == :process_value)
         @state = :done
       end

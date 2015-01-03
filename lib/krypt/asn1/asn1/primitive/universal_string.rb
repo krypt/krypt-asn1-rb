@@ -4,10 +4,10 @@ module Krypt::Asn1
   class UniversalString < Primitive
     include StringCodec
 
-    def default_tag
+    def self.default_tag
       UNIVERSAL_STRING
     end
-    
+
   end
 end
 

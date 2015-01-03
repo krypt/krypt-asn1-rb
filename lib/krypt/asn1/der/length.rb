@@ -19,7 +19,7 @@ module Krypt::Asn1
     private
 
     def encode
-      @encoding = Der::LengthEncoder.encode(self)
+      Der::LengthEncoder.encode(self)
     end
 
   end

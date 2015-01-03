@@ -4,7 +4,7 @@ module Krypt::Asn1
   class CharacterString < Primitive
     include StringCodec
 
-    def default_tag
+    def self.default_tag
       CHARACTER_STRING
     end
 

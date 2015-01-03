@@ -11,34 +11,50 @@ describe Krypt::Asn1::Der::Length do
     context 'definite length' do
       subject { len.new(length: l) }
 
-      context '<= 127' do 
+      context '<= 127' do
 
         context '0' do
           let(:l) { 0 }
 
-          its(:encoding) { should eq("\x00") }
-          its(:indefinite?) { should be_false }
+          it 'encodes to \x00' do
+            expect(subject.encoding).to eq("\x00")
+          end
+          it "is definite" do
+            expect(subject.indefinite?).to eq(false)
+          end
         end
 
         context '1' do
           let(:l) { 1 }
 
-          its(:encoding) { should eq("\x01") }
-          its(:indefinite?) { should be_false }
+          it 'encodes to \x01' do
+            expect(subject.encoding).to eq("\x01")
+          end
+          it "is definite" do
+            expect(subject.indefinite?).to eq(false)
+          end
         end
 
         context '42' do
           let(:l) { 42 }
 
-          its(:encoding) { should eq("\x2A") }
-          its(:indefinite?) { should be_false }
+          it 'encodes to \x2A' do
+            expect(subject.encoding).to eq("\x2A")
+          end
+          it "is definite" do
+            expect(subject.indefinite?).to eq(false)
+          end
         end
 
         context '127' do
           let(:l) { 127 }
 
-          its(:encoding) { should eq("\x7F") }
-          its(:indefinite?) { should be_false }
+          it 'encodes to \x7F' do
+            expect(subject.encoding).to eq("\x7F")
+          end
+          it "is definite" do
+            expect(subject.indefinite?).to eq(false)
+          end
         end
       end
 
@@ -47,29 +63,45 @@ describe Krypt::Asn1::Der::Length do
         context '128 (one byte)' do
           let(:l) { 128 }
 
-          its(:encoding) { should eq("\x81\x80") }
-          its(:indefinite?) { should be_false }
+          it 'encodes to \x81\x80' do
+            expect(subject.encoding).to eq("\x81\x80")
+          end
+          it "is definite" do
+            expect(subject.indefinite?).to eq(false)
+          end
         end
 
         context '256 (two bytes)' do
           let(:l) { 256 }
 
-          its(:encoding) { should eq("\x82\x00\x01") }
-          its(:indefinite?) { should be_false }
+          it 'encodes to \x82\x00\x01' do
+            expect(subject.encoding).to eq("\x82\x00\x01")
+          end
+          it "is definite" do
+            expect(subject.indefinite?).to eq(false)
+          end
         end
 
         context '300 (two bytes)' do
           let(:l) { 300 }
 
-          its(:encoding) { should eq("\x82\x2C\x01") }
-          its(:indefinite?) { should be_false }
+          it 'encodes to \x82\x2C\x01' do
+            expect(subject.encoding).to eq("\x82\x2C\x01")
+          end
+          it "is definite" do
+            expect(subject.indefinite?).to eq(false)
+          end
         end
 
         context '111.111 (three bytes)' do
           let(:l) { 111_111 }
 
-          its(:encoding) { should eq("\x83\x07\xB2\x01") }
-          its(:indefinite?) { should be_false }
+          it 'encodes to \x83\x07\xB2\x01' do
+            expect(subject.encoding).to eq("\x83\x07\xB2\x01")
+          end
+          it "is definite" do
+            expect(subject.indefinite?).to eq(false)
+          end
         end
       end
 
@@ -79,8 +111,12 @@ describe Krypt::Asn1::Der::Length do
 
       subject { len.new(indefinite: true) }
 
-      its(:encoding) { should eq("\x80") }
-      its(:indefinite?) { should be_true }
+      it 'encodes to \x80' do
+        expect(subject.encoding).to eq("\x80")
+      end
+      it "is indefinite" do
+        expect(subject.indefinite?).to eq(true)
+      end
     end
 
   end

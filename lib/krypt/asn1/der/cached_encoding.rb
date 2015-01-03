@@ -2,7 +2,7 @@ module Krypt::Asn1
   module Der::CachedEncoding
 
     def encoding
-      @encoding || encode
+      @encoding ||= encode
     end
 
     def encode_to(io)

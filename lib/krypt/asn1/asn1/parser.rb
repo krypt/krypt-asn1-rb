@@ -44,6 +44,8 @@ module Krypt::Asn1
       CharacterString,
       BmpString
     ]
+    private_constant :UNIVERSAL_CLASSES
+
 
     def interpret(der)
       tag = der.tag
@@ -51,11 +53,8 @@ module Krypt::Asn1
       tc = tag.tag_class.tag_class
       validate(t, tc)
 
-      if tag.constructed?
-        interpret_with_fallback(t, tc, der, Constructed)
-      else
-        interpret_with_fallback(t, tc, der, Primitive)
-      end
+      fallback = tag.constructed? ? Constructed : Primitive
+      interpret_with_fallback(t, tc, der, fallback)
     end
 
     def interpret_with_fallback(tag, tc, der, fallback)

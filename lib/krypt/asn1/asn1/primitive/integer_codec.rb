@@ -37,7 +37,7 @@ module Krypt::Asn1
       if first > 0x80
         pad = true
       elsif first == 0x80
-        pad = rest_not_zero(bytes)
+        pad = rest_not_zero?(bytes)
       end
 
       twos_complement!(bytes)
@@ -45,7 +45,7 @@ module Krypt::Asn1
       bytes
     end
 
-    def rest_not_zero(bytes)
+    def rest_not_zero?(bytes)
       return false if bytes.size == 1
       bytes[1..-1].each_byte.any? { |b| b > 0 }
     end
@@ -80,7 +80,7 @@ module Krypt::Asn1
 
       bytes.setbyte(i, (b.ord ^ 0xff) + 1) # last non-zero byte is negated and incremented
       i -= 1
-      
+
       while i >= 0
         bytes.setbyte(i, (bytes[i].ord ^ 0xff)) # remaining leading bytes are just negated
         i -= 1

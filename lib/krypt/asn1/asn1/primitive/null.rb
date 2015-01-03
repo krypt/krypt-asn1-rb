@@ -3,8 +3,12 @@
 module Krypt::Asn1
   class Null < Primitive
 
+    def self.default_tag
+      NULL
+    end
+
     def initialize
-      super(tag: Asn1::NULL, tag_class: :UNIVERSAL)
+      super(nil, tag: NULL, tag_class: :UNIVERSAL)
     end
 
     def parse_value(bytes)
@@ -14,10 +18,6 @@ module Krypt::Asn1
 
     def encode_value(value)
       nil
-    end
-
-    def default_tag
-      NULL
     end
 
   end

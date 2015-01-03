@@ -19,7 +19,7 @@ module Krypt::Asn1
 
 
     class << self
-      
+
       def of(tag_class)
         self.new(tag_class, determine_mask(tag_class))
       end

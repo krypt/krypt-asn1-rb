@@ -4,11 +4,10 @@
 
 # krypt-asn1-rb
 
-
 Seeks to provide an implementation for Krypt::ASN1 written entirely in Ruby. If
 performance is acceptable, it will ultimately replace the current native
 implementations. We would still keep them around as separate, supplemental
-providers, though - in case you need every last bit of performance. 
+providers, though - in case you need every last bit of performance.
 
 
 ## krypt
@@ -20,7 +19,7 @@ https://github.com/krypt/krypt
 
 ## License
 
-Copyright (c) 2013 Martin Boßlet.
+Copyright (c) 2013-2015 Martin Boßlet.
 krypt and all its sub projects are distributed under the MIT
 License. See LICENSE for further details.
 

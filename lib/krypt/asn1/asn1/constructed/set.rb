@@ -1,14 +1,19 @@
 module Krypt::Asn1
   class Set < Constructed
 
-    def encode_value(values)
-      # TODO
+    def self.default_tag
+      SET
     end
 
-    def default_tag
-      SEQUENCE
+    def sort_values(values)
+      # preserve potentially wrong order for parsed SETs
+      return values if parsed?
+      return values.sort if values.respond_to?(:sort)
+      ary = []
+      values.each { |v| ary << v }
+      ary.sort
     end
-    
+
   end
 end
 

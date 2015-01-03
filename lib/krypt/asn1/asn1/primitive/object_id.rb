@@ -1,6 +1,10 @@
 module Krypt::Asn1
   class ObjectId < Primitive
 
+    def self.default_tag
+      OBJECT_ID
+    end
+
     def parse_value(bytes)
       [].tap do |oid|
         n, off = parse_int(bytes, 0)
@@ -19,10 +23,6 @@ module Krypt::Asn1
         encode_int(buf, 40 * value[0] + value[1])
         value.slice(2..-1).each { |n| encode_int(buf, n) }
       end
-    end
-
-    def default_tag
-      OBJECT_ID
     end
 
     private

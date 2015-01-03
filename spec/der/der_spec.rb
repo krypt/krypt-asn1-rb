@@ -2,7 +2,7 @@
 
 require 'spec_helper'
 
-describe Krypt::Asn1::Der do
+RSpec.describe Krypt::Asn1::Der do
 
   let(:der) { Krypt::Asn1::Der }
   let(:tag) { Krypt::Asn1::Der::Tag }
@@ -23,15 +23,19 @@ describe Krypt::Asn1::Der do
 
           context 'INTEGER' do
             let(:t) { Krypt::Asn1::INTEGER }
-            
+
             context '0' do
               let(:v) { "\x00" }
-              its(:encoding) { should eq("\x02\x01\x00") }
+              it 'should encode to \x02\x01\x00' do
+                expect(subject.encoding).to eq("\x02\x01\x00")
+              end
             end
 
             context '42' do
               let(:v) { "\x01\x02" }
-              its(:encoding) { should eq("\x02\x02\x01\x02") }
+              it 'should encode to \x02\x02\x01\x02' do
+                expect(subject.encoding).to eq("\x02\x02\x01\x02")
+              end
             end
           end
 
@@ -51,10 +55,13 @@ describe Krypt::Asn1::Der do
 
           context 'OCTET STRING' do
             let(:t) { Krypt::Asn1::OCTET_STRING }
-            
+
             context '07' do
               let(:v) { "\x04\x01\x07\x00\x00" }
-              its(:encoding) { should eq("\x24\x80\x04\x01\x07\x00\x00") }
+
+              it 'should encode to \x24\x80\x04\x01\x07\x00\x00' do
+                expect(subject.encoding).to eq("\x24\x80\x04\x01\x07\x00\x00")
+              end
             end
           end
 
@@ -67,5 +74,4 @@ describe Krypt::Asn1::Der do
   end
 
 end
-
 

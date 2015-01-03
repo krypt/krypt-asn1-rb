@@ -5,9 +5,9 @@ module Krypt::Asn1
 
     def encoding
       # String.new enforces BINARY encoding
-      StringIO.new(String.new).tap do |io|
-        encode_to(io)
-      end.string
+      io = StringIO.new(String.new)
+      encode_to(io)
+      io.string
     end
     alias :to_der :encoding
 

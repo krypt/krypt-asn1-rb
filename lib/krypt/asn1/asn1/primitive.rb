@@ -3,12 +3,10 @@ module Krypt::Asn1
 
     attr_reader :tag, :tag_class
 
-    def initialize(options)
-      if options.respond_to?(:has_key?)
-        init_hash(options)
-      else
-        init_value(options)
-      end
+    def initialize(value, options={})
+      @tag = options[:tag] || self.class.default_tag
+      @tag_class = options[:tag_class] || :UNIVERSAL
+      @value = value
     end
 
     def indefinite?; false; end
@@ -23,14 +21,10 @@ module Krypt::Asn1
     end
 
     def encode_to(io)
-      unless defined?(@der) 
+      unless defined?(@der)
         @der = create_der
       end
       @der.encode_to(io)
-    end
-
-    def default_tag
-      raise "No default tag for Primitive class"
     end
 
     class << self
@@ -47,31 +41,12 @@ module Krypt::Asn1
       end
 
       def of(value)
-        new(value: value)
+        new(value)
       end
 
     end
 
-    private
-
-    def init_hash(options)
-      @tag = options[:tag] || default_tag
-      @tag_class = options[:tag_class] || :UNIVERSAL
-      @value = options[:value]
-    end
-
-    def init_value(value)
-      @tag = default_tag
-      @tag_class = :UNIVERSAL
-      @value = value
-    end
-
-    def create_der
-      tag = Der::Tag.new(tag: @tag, tag_class: @tag_class)
-      value = encode_value(@value)
-      length = Der::Length.new(length: value ? value.size : 0)
-      Der.new(tag, length, value)
-    end
+    protected
 
     def parse_value(bytes)
       bytes
@@ -79,6 +54,15 @@ module Krypt::Asn1
 
     def encode_value(value)
       value
+    end
+
+    private
+
+    def create_der
+      tag = Der::Tag.new(tag: @tag, tag_class: @tag_class)
+      value = encode_value(@value)
+      length = Der::Length.new(length: value ? value.size : 0)
+      Der.new(tag, length, value)
     end
 
   end

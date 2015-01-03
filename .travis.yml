@@ -1,17 +1,17 @@
 script: 'ci/travis.rb'
 rvm:
   - ruby-head
-  - 2.0.0
-  - 1.9.3
-  - jruby-19mode
+  - 2.2
+  - 2.1
+  - 2.0
   - jruby-head
-  - rbx-19mode
+  - rbx-2
 gemfile:
   - Gemfile
 notifications:
   email:
     recipients:
-      - Martin.Bosslet@googlemail.com
+      - Martin.Bosslet@gmail.com
     on_success: always
     on_failure: always
 branches:
