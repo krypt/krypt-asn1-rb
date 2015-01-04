@@ -5,10 +5,6 @@ module Krypt::Asn1
       SEQUENCE
     end
 
-    def sort_values(values)
-      values
-    end
-
   end
 end
 

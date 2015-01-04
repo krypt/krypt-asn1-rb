@@ -55,18 +55,13 @@ module Krypt::Asn1
 
     end
 
-    def add_eoc(values, io)
-      last = values.last
-      # just add if it was not present in the values
-      needs_eoc = last.nil? ||
-                  !(last.tag == END_OF_CONTENTS && last.tag_class == :UNIVERSAL)
-
-      EndOfContents.new.encode_to(io) if needs_eoc
-    end
-
     protected
 
     def parsed?; @parsed; end
+
+    def sort_values(values)
+      values
+    end
 
     private
 
@@ -114,6 +109,15 @@ module Krypt::Asn1
       sorted = sort_values(value)
       sorted.each { |v| v.encode_to(io) }
       add_eoc(sorted, io) if indefinite?
+    end
+
+    def add_eoc(values, io)
+      last = values.last
+      # just add if it was not present in the values
+      needs_eoc = last.nil? ||
+                  !(last.tag == END_OF_CONTENTS && last.tag_class == :UNIVERSAL)
+
+      EndOfContents.new.encode_to(io) if needs_eoc
     end
 
   end
