@@ -91,7 +91,7 @@ module Krypt::Asn1
     def check_done
       tag = @current_header.tag
       if (tag.tag == 0x00 &&
-          tag.tag_class.mask == 0x00 &&
+          tag.tag_class == 0x00 &&
           @state == :process_value)
         @state = :done
       end

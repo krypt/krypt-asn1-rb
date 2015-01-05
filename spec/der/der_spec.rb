@@ -6,6 +6,7 @@ RSpec.describe Krypt::Asn1::Der do
 
   let(:der) { Krypt::Asn1::Der }
   let(:tag) { Krypt::Asn1::Der::Tag }
+  let(:tag_class) { Krypt::Asn1::Der::TagClass }
   let(:len) { Krypt::Asn1::Der::Length }
 
   describe '#encoding' do
@@ -19,7 +20,7 @@ RSpec.describe Krypt::Asn1::Der do
         let(:cons) { false }
 
         context ':UNIVERSAL' do
-          let(:tc) { :UNIVERSAL }
+          let(:tc) { tag_class::UNIVERSAL }
 
           context 'INTEGER' do
             let(:t) { Krypt::Asn1::INTEGER }
@@ -51,7 +52,7 @@ RSpec.describe Krypt::Asn1::Der do
         let(:cons) { true }
 
         context ':UNIVERSAL' do
-          let(:tc) { :UNIVERSAL }
+          let(:tc) { tag_class::UNIVERSAL }
 
           context 'OCTET STRING' do
             let(:t) { Krypt::Asn1::OCTET_STRING }

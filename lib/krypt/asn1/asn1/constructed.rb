@@ -5,7 +5,7 @@ module Krypt::Asn1
 
     def initialize(value, options={})
       t = options[:tag] || self.class.default_tag
-      tc = options[:tag_class] || :UNIVERSAL
+      tc = options[:tag_class] || Der::TagClass::UNIVERSAL
       @tag = Der::Tag.new(tag: t, tag_class: tc, constructed: true)
       @indefinite = !!options[:indefinite]
       @value = value
@@ -16,7 +16,7 @@ module Krypt::Asn1
     end
 
     def tag_class
-      @tag.tag_class.tag_class
+      @tag.tag_class
     end
 
     def indefinite?; @indefinite; end
@@ -24,10 +24,7 @@ module Krypt::Asn1
     def constructed?; true; end
 
     def value
-      unless defined?(@value)
-        @value = parse_value(@der_value)
-        remove_instance_variable(:@der_value) # erase the cached encoding
-      end
+      parse_value unless defined?(@value)
       @value
     end
 
@@ -65,10 +62,10 @@ module Krypt::Asn1
 
     private
 
-    def parse_value(bytes)
+    def parse_value
       parser = Parser.new
       objects = []
-      io = StringIO.new(bytes)
+      io = StringIO.new(@der_value)
 
       while object = parser.parse(io)
         objects << object
@@ -77,7 +74,8 @@ module Krypt::Asn1
       # do not include END_OF_CONTENT
       objects.pop if @indefinite
 
-      objects
+      remove_instance_variable(:@der_value) # erase the cached encoding
+      @value = objects
     end
 
     def encode_cached_to(io)
@@ -116,7 +114,10 @@ module Krypt::Asn1
       last = values.last
       # just add if it was not present in the values
       needs_eoc = last.nil? ||
-                  !(last.tag == END_OF_CONTENTS && last.tag_class == :UNIVERSAL)
+                  !(
+                    last.tag == END_OF_CONTENTS &&
+                    last.tag_class == Der::TagClass::UNIVERSAL
+                  )
 
       EndOfContents.new.encode_to(io) if needs_eoc
     end

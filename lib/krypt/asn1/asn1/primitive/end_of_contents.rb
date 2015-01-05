@@ -8,7 +8,7 @@ module Krypt::Asn1
     end
 
     def initialize
-      super(nil, tag: END_OF_CONTENTS, tag_class: :UNIVERSAL)
+      super(nil, tag: END_OF_CONTENTS, tag_class: Der::TagClass::UNIVERSAL)
     end
 
     def parse_value(bytes)

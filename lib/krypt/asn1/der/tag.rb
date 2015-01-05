@@ -7,17 +7,15 @@ module Krypt::Asn1
     CONSTRUCTED_MASK = 0x20
     COMPLEX_TAG_MASK = 0x1f
 
-    attr_reader :tag, :tag_class
+    attr_reader :tag, :tag_class, :constructed
+    alias constructed? constructed
 
     def initialize(options)
       @tag = options[:tag]
-      tc = options[:tag_class]
-      @tag_class = tc ? Der::TagClass.of(tc) : Der::TagClass.of(:UNIVERSAL)
+      @tag_class = options[:tag_class] || Der::TagClass::UNIVERSAL
       @constructed = !!options[:constructed]
       @encoding = options[:encoding]
     end
-
-    def constructed?; @constructed; end
 
     private
 

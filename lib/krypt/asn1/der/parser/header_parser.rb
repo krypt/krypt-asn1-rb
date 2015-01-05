@@ -105,7 +105,8 @@ module Krypt::Asn1
     end
 
     def with_tc_and_cons(b)
-      tc = Der::TagClass.of_mask(b & Der::TagClass::PRIVATE)
+      # TODO validate tag class
+      tc = b & Der::TagClass::PRIVATE
       cons = match(b, Der::Tag::CONSTRUCTED_MASK)
       yield tc, cons
     end

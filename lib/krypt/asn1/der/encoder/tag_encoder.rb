@@ -13,14 +13,14 @@ module Krypt::Asn1
 
     def simple_tag(tag)
       tag_byte = cons_or_null_byte(tag)
-      tag_byte |= tag.tag_class.mask
+      tag_byte |= tag.tag_class
       tag_byte |= tag.tag
       tag_byte.chr
     end
 
     def complex_tag(tag)
       tag_byte = cons_or_null_byte(tag)
-      tag_byte |= tag.tag_class.mask
+      tag_byte |= tag.tag_class
       tag_byte |= Der::Tag::COMPLEX_TAG_MASK
 
       process_tag(tag.tag).prepend(tag_byte.chr)

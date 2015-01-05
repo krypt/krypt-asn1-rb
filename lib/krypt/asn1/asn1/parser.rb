@@ -6,7 +6,7 @@ module Krypt::Asn1
     def parse(io_or_string)
       header = Der::HeaderParser.new(io_or_string).next
       return nil unless header
-      interpret(header.asn1_object)
+      interpret(header.create_der)
     end
 
     private
@@ -50,10 +50,10 @@ module Krypt::Asn1
     def interpret(der)
       tag = der.tag
       t = tag.tag
-      tc = tag.tag_class.tag_class
+      tc = tag.tag_class
       validate(t, tc)
 
-      if tc == :UNIVERSAL
+      if tc == Der::TagClass::UNIVERSAL
         c = UNIVERSAL_CLASSES[t]
         return c.from_der(der) if c
       end
@@ -63,7 +63,7 @@ module Krypt::Asn1
     end
 
     def validate(tag, tc)
-      if tag > 30 && tc == :UNIVERSAL
+      if tag > 30 && tc == Der::TagClass::UNIVERSAL
         raise "Invalid tag for UNIVERSAL class: #{tag}"
       end
     end

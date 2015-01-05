@@ -9,7 +9,7 @@ module Krypt::Asn1
       @parser = header_parser
     end
 
-    def asn1_object
+    def create_der
       Der.new(@tag, @length, value)
     end
 

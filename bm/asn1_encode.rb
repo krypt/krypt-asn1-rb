@@ -3,7 +3,9 @@ require 'time'
 require 'krypt/asn1'
 require 'openssl'
 
-ossl_content =
+require 'stackprof'
+
+def ossl_content
   [
     OpenSSL::ASN1::Boolean.new(true),
     OpenSSL::ASN1::Integer.new(65536),
@@ -30,8 +32,9 @@ ossl_content =
     OpenSSL::ASN1::UniversalString.new("abcdefghijklmnopqrstuvwxyz"),
     OpenSSL::ASN1::BMPString.new("abcdefghijklmnopqrstuvwxyz")
   ]
+end
 
-krypt_content =
+def krypt_content
   [
     Krypt::Asn1::Boolean.new(true),
     Krypt::Asn1::Integer.new(65536),
@@ -40,8 +43,8 @@ krypt_content =
     Krypt::Asn1::OctetString.new("abcdefghijklmnopqrstuvwxyz"),
     Krypt::Asn1::Null.new,
     Krypt::Asn1::ObjectId.new([1, 30, 87654321, 987654321 ,23]),
-    Krypt::Asn1::Integer.new(65536),
-    Krypt::Asn1::Integer.new(1234567890123456789012345678901234567890),
+    Krypt::Asn1::Enumerated.new(65536),
+    Krypt::Asn1::Enumerated.new(1234567890123456789012345678901234567890),
     Krypt::Asn1::Utf8String.new("abcdefghijklmnopqrstuvwxyz"),
     Krypt::Asn1::UtcTime.new(Time.now),
     Krypt::Asn1::UtcTime.new(DateTime.now),
@@ -58,35 +61,35 @@ krypt_content =
     Krypt::Asn1::UniversalString.new("abcdefghijklmnopqrstuvwxyz"),
     Krypt::Asn1::BmpString.new("abcdefghijklmnopqrstuvwxyz")
   ]
+end
 
 Benchmark.bm do |bm|
   filename = "bmtmp"
   file = File.open(filename, "wb")
   n = 20_000
 
-  krypt_seq = Krypt::Asn1::Sequence.new(krypt_content)
-  krypt_set = Krypt::Asn1::Sequence.new(krypt_content)
-  krypt_asn1 = Krypt::Asn1::Sequence.new([krypt_seq, krypt_set])
-  ossl_seq = OpenSSL::ASN1::Sequence.new(ossl_content)
-  ossl_set = OpenSSL::ASN1::Sequence.new(ossl_content)
-  ossl_asn1 = OpenSSL::ASN1::Sequence.new([ossl_seq, ossl_set])
+  krypt_asn1 = Krypt::Asn1::Sequence.new(krypt_content)
+  ossl_asn1 = OpenSSL::ASN1::Sequence.new(ossl_content)
 
   bm.report("OpenSSL encode generated once(n=#{n}) ") { n.times { ossl_asn1.to_der } }
   bm.report("Krypt encode generated once(n=#{n}) ") { n.times { krypt_asn1.to_der } }
   bm.report("OpenSSL encode generated n times(n=#{n}) ") do
     n.times do
-      ossl_seq = OpenSSL::ASN1::Sequence.new(ossl_content)
-      ossl_set = OpenSSL::ASN1::Sequence.new(ossl_content)
-      OpenSSL::ASN1::Sequence.new([ossl_seq, ossl_set]).to_der
+      OpenSSL::ASN1::Sequence.new(ossl_content).to_der
     end
   end
   bm.report("Krypt encode generated n times(n=#{n}) ") do
-    n.times do
-      krypt_seq = Krypt::Asn1::Sequence.new(krypt_content)
-      krypt_set = Krypt::Asn1::Sequence.new(krypt_content)
-      Krypt::Asn1::Sequence.new([krypt_seq, krypt_set]).to_der
+    StackProf.run(mode: :cpu, out: 'stackprof-encode.dump') do
+      n.times do
+        Krypt::Asn1::Sequence.new(krypt_content).to_der
+      end
     end
   end
+end
+
+exit
+
+Benchmark.bm do |bm|
 
   bm.report("Krypt encode generated n times SEQ(n=#{n}) ") do
     n.times do

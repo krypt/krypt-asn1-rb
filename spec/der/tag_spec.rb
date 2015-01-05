@@ -5,13 +5,14 @@ require 'spec_helper'
 describe Krypt::Asn1::Der::Tag do
 
   let(:tag) { Krypt::Asn1::Der::Tag }
+  let(:tag_class) { Krypt::Asn1::Der::TagClass }
 
   describe '#encoding' do
 
     subject { tag.new(tag: t, tag_class: tc) }
 
     context ':UNIVERSAL' do
-      let(:tc) { :UNIVERSAL }
+      let(:tc) { tag_class::UNIVERSAL }
 
       context 'NULL' do
         let(:t) { Krypt::Asn1::NULL }
@@ -23,7 +24,7 @@ describe Krypt::Asn1::Der::Tag do
     end
 
     context ':APPLICATION' do
-      let(:tc) { :APPLICATION }
+      let(:tc) { tag_class::APPLICATION }
 
       context 'NULL' do
         let(:t) { Krypt::Asn1::NULL }
@@ -35,7 +36,7 @@ describe Krypt::Asn1::Der::Tag do
     end
 
     context ':CONTEXT_SPECIFIC' do
-      let(:tc) { :CONTEXT_SPECIFIC }
+      let(:tc) { tag_class::CONTEXT_SPECIFIC }
 
       context 'NULL' do
         let(:t) { Krypt::Asn1::NULL }
@@ -47,7 +48,7 @@ describe Krypt::Asn1::Der::Tag do
     end
 
     context ':PRIVATE' do
-      let(:tc) { :PRIVATE }
+      let(:tc) { tag_class::PRIVATE }
 
       context 'NULL' do
         let(:t) { Krypt::Asn1::NULL }

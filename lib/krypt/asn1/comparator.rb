@@ -25,8 +25,8 @@ module Krypt::Asn1
       t1 = tag1.tag
       t2 = tag2.tag
 
-      return 1 if eoc?(t1, tag1.tag_class.to_sym)
-      return -1 if eoc?(t2, tag2.tag_class.to_sym)
+      return 1 if eoc?(t1, tag1.tag_class)
+      return -1 if eoc?(t2, tag2.tag_class)
       return -1 if t1 < t2
       return 1 if t1 > t2
     end
@@ -43,7 +43,7 @@ module Krypt::Asn1
     end
 
     def eoc?(t, tc)
-      t == END_OF_CONTENTS && tc == :UNIVERSAL
+      t == END_OF_CONTENTS && tc == Der::TagClass::UNIVERSAL
     end
 
   end

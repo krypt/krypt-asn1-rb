@@ -1,17 +1,23 @@
 module Krypt::Asn1
   class Primitive < Asn1Base
 
-    attr_reader :tag, :tag_class
-
     def initialize(value, options={})
       @tag = options[:tag] || self.class.default_tag
-      @tag_class = options[:tag_class] || :UNIVERSAL
+      @tag_class = options[:tag_class] || Der::TagClass::UNIVERSAL
       @value = value
     end
 
     def indefinite?; false; end
 
     def constructed?; false; end
+
+    def tag
+      defined?(@der) ? @der.tag.tag : @tag
+    end
+
+    def tag_class
+      defined?(@der) ? @der.tag.tag_class : @tag_class
+    end
 
     def value
       unless defined?(@value)
@@ -21,9 +27,7 @@ module Krypt::Asn1
     end
 
     def encode_to(io)
-      unless defined?(@der)
-        @der = create_der
-      end
+      create_der unless defined?(@der)
       @der.encode_to(io)
     end
 
@@ -31,12 +35,7 @@ module Krypt::Asn1
 
       def from_der(der)
         obj = allocate
-        obj.instance_eval do
-          t = der.tag
-          @tag = t.tag
-          @tag_class = t.tag_class.tag_class
-          @der = der
-        end
+        obj.instance_eval { @der = der }
         obj
       end
 
@@ -62,7 +61,9 @@ module Krypt::Asn1
       tag = Der::Tag.new(tag: @tag, tag_class: @tag_class)
       value = encode_value(@value)
       length = Der::Length.new(length: value ? value.size : 0)
-      Der.new(tag, length, value)
+      remove_instance_variable(:@tag)
+      remove_instance_variable(:@tag_class)
+      @der = Der.new(tag, length, value)
     end
 
   end

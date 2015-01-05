@@ -6,15 +6,14 @@ module Krypt::Asn1
 
     INDEFINITE_LENGTH_MASK = 0x80
 
-    attr_reader :length
+    attr_reader :length, :indefinite
+    alias indefinite? indefinite
 
     def initialize(options)
       @length = options[:length]
       @indefinite = !!options[:indefinite]
       @encoding = options[:encoding]
     end
-
-    def indefinite?; @indefinite; end
 
     private
 
