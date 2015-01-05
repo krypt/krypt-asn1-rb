@@ -53,18 +53,13 @@ module Krypt::Asn1
       tc = tag.tag_class.tag_class
       validate(t, tc)
 
-      fallback = tag.constructed? ? Constructed : Primitive
-      interpret_with_fallback(t, tc, der, fallback)
-    end
-
-    def interpret_with_fallback(tag, tc, der, fallback)
       if tc == :UNIVERSAL
-        c = UNIVERSAL_CLASSES[tag]
+        c = UNIVERSAL_CLASSES[t]
         return c.from_der(der) if c
-        fallback.from_der(der)
-      else
-        fallback.from_der(der)
       end
+
+      fallback = tag.constructed? ? Constructed : Primitive
+      fallback.from_der(der)
     end
 
     def validate(tag, tc)

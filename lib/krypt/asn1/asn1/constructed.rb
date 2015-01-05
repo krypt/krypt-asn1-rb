@@ -26,7 +26,7 @@ module Krypt::Asn1
     def value
       unless defined?(@value)
         @value = parse_value(@der_value)
-        @der_value = nil # erase the cached encoding
+        remove_instance_variable(:@der_value) # erase the cached encoding
       end
       @value
     end
@@ -92,17 +92,18 @@ module Krypt::Asn1
         @length.encode_to(io)
         encode_values_to(io)
       else
-        compute_lv_to(io)
+        @length = encode_lv_to(io)
       end
     end
 
-    def compute_lv_to(io)
+    def encode_lv_to(io)
       value_io = StringIO.new(String.new)
       encode_values_to(value_io)
       value = value_io.string
-      @length = Der::Length.new(length: value.size, indefinite: @indefinite)
-      @length.encode_to(io)
+      length = Der::Length.new(length: value.size, indefinite: @indefinite)
+      length.encode_to(io)
       io << value
+      length
     end
 
     def encode_values_to(io)

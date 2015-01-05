@@ -20,7 +20,7 @@ module Krypt::Asn1
 
     def encode_value(value)
       String.new.tap do |buf|
-        encode_int(buf, 40 * value[0] + value[1])
+        encode_int(buf, 40 * value[0].to_i + value[1].to_i)
         value.slice(2..-1).each { |n| encode_int(buf, n) }
       end
     end
