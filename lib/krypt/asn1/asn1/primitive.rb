@@ -1,33 +1,28 @@
+require_relative 'primitive/lazy_encodeable_primitive'
+require_relative 'primitive/lazy_parseable_primitive'
+
 module Krypt::Asn1
   class Primitive < Asn1Base
 
     def initialize(value, options={})
-      @tag = options[:tag] || self.class.default_tag
-      @tag_class = options[:tag_class] || Der::TagClass::UNIVERSAL
-      @value = value
+      tag = options[:tag] || self.class.default_tag
+      tag_class = options[:tag_class] || Der::TagClass::UNIVERSAL
+      @der = LazyEncodeablePrimitive.new(tag, tag_class, value, self)
     end
-
-    def indefinite?; false; end
-
-    def constructed?; false; end
 
     def tag
-      defined?(@der) ? @der.tag.tag : @tag
+      @der.tag
     end
 
-    def tag_class
-      defined?(@der) ? @der.tag.tag_class : @tag_class
+    def length
+      @der.length
     end
 
     def value
-      unless defined?(@value)
-        @value = parse_value(@der.value)
-      end
-      @value
+      @der.parsed_value
     end
 
     def encode_to(io)
-      create_der unless defined?(@der)
       @der.encode_to(io)
     end
 
@@ -35,35 +30,20 @@ module Krypt::Asn1
 
       def from_der(der)
         obj = allocate
-        obj.instance_eval { @der = der }
+        obj.instance_eval { @der = LazyParseablePrimitive.new(der, obj) }
         obj
-      end
-
-      def of(value)
-        new(value)
       end
 
     end
 
     protected
 
-    def parse_value(bytes)
-      bytes
-    end
-
     def encode_value(value)
       value
     end
 
-    private
-
-    def create_der
-      tag = Der::Tag.new(tag: @tag, tag_class: @tag_class)
-      value = encode_value(@value)
-      length = Der::Length.new(length: value ? value.size : 0)
-      remove_instance_variable(:@tag)
-      remove_instance_variable(:@tag_class)
-      @der = Der.new(tag, length, value)
+    def parse_value(value)
+      value
     end
 
   end

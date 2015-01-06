@@ -15,6 +15,14 @@ module Krypt::Asn1
       Comparator.compare(to_der, other.to_der)
     end
 
+    def encode_value(value)
+      value
+    end
+
+    def parse_value(value)
+      value
+    end
+
   end
 end
 

@@ -10,7 +10,7 @@ module Krypt::Asn1
 
       len = length.length
 
-      if len <= 127
+      if len < 128
         len.chr
       else
         complex_length(len)
@@ -21,19 +21,19 @@ module Krypt::Asn1
 
     def complex_length(len)
       # TODO raise error if bytes.size too large
-      length_bytes(len).pack('C*')
+      length_bytes(len)
     end
 
     def length_bytes(len)
-      return [0] if len == 0
       num_bytes = bytelen(len) | Der::Length::INDEFINITE_LENGTH_MASK
+      buf = num_bytes.chr
 
-      [num_bytes].tap do |ary|
-        while len > 0
-          ary << (len & 0xff)
-          len >>= 8
-        end
+      while len > 0
+        buf << (len & 0xff).chr
+        len >>= 8
       end
+
+      buf
     end
 
     def bytelen(value)

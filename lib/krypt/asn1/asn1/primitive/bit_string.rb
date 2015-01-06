@@ -23,6 +23,8 @@ module Krypt::Asn1
       value.prepend(@unused_bits.chr)
     end
 
+    private
+
     def check_unused_bits
       if @unused_bits < 0 || @unused_bits > 7
         raise "Unused bits must be 0..7"

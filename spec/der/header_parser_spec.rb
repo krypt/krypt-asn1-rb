@@ -57,7 +57,7 @@ RSpec.describe Krypt::Asn1::Der::HeaderParser do
         end
 
         context ':UNIVERSAL OCTET STRING complex length 2 bytes' do
-          let(:enc) { "\x04\x82\x01\x00" << ("\xFF" * 256) }
+          let(:enc) { "\x04\x82\x00\x01" << ("\xFF" * 256) }
 
           context 'tag' do
             subject { hp.new(enc).next.create_der.tag }
@@ -86,8 +86,8 @@ RSpec.describe Krypt::Asn1::Der::HeaderParser do
             it "is definite" do
               expect(subject.indefinite?).to eq(false)
             end
-            it 'encodes to \x82\x01\x00' do
-              expect(subject.encoding).to eq("\x82\x01\x00")
+            it 'encodes to \x82\x00\x01' do
+              expect(subject.encoding).to eq("\x82\x00\x01")
             end
           end
 

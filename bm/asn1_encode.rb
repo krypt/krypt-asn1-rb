@@ -3,8 +3,6 @@ require 'time'
 require 'krypt/asn1'
 require 'openssl'
 
-require 'stackprof'
-
 def ossl_content
   [
     OpenSSL::ASN1::Boolean.new(true),
@@ -79,10 +77,8 @@ Benchmark.bm do |bm|
     end
   end
   bm.report("Krypt encode generated n times(n=#{n}) ") do
-    StackProf.run(mode: :cpu, out: 'stackprof-encode.dump') do
-      n.times do
-        Krypt::Asn1::Sequence.new(krypt_content).to_der
-      end
+    n.times do
+      Krypt::Asn1::Sequence.new(krypt_content).to_der
     end
   end
 end
