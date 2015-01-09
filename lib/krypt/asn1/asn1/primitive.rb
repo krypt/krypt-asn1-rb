@@ -26,6 +26,10 @@ module Krypt::Asn1
       @der.encode_to(io)
     end
 
+    def accept(visitor)
+      visitor.visit_primitive(self)
+    end
+
     class << self
 
       def from_der(der)

@@ -5,6 +5,16 @@ module Krypt::Asn1
     include IOEncodable
     include Comparable
 
+    class DisplayVisitor
+      def visit_constructed(constructed)
+        puts "Cons: #{constructed.inspect}"
+      end
+
+      def visit_primitive(primitive)
+        puts "Prim: #{primitive.inspect}"
+      end
+    end
+
     def ==(other)
       return false unless other.respond_to?(:to_der)
       to_der == other.to_der
@@ -15,14 +25,9 @@ module Krypt::Asn1
       Comparator.compare(to_der, other.to_der)
     end
 
-    def encode_value(value)
-      value
+    def dump
+      accept(DisplayVisitor.new)
     end
-
-    def parse_value(value)
-      value
-    end
-
   end
 end
 

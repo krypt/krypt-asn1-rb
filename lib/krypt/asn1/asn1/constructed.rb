@@ -2,6 +2,7 @@
 
 module Krypt::Asn1
   class Constructed < Asn1Base
+    include Enumerable
 
     attr_reader :tag
 
@@ -33,6 +34,15 @@ module Krypt::Asn1
       else
         encode_tlv_to(io)
       end
+    end
+
+    def each(&block)
+      value.each(&block)
+    end
+
+    def accept(visitor)
+      visitor.visit_constructed(self)
+      each { |v| v.accept(visitor) }
     end
 
     class << self
