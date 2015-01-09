@@ -1,5 +1,5 @@
-require_relative 'primitive/lazy_encodeable_primitive'
-require_relative 'primitive/lazy_parseable_primitive'
+require_relative 'primitive/lazy_encodable_primitive'
+require_relative 'primitive/lazy_parsable_primitive'
 
 module Krypt::Asn1
   class Primitive < Asn1Base
@@ -7,7 +7,7 @@ module Krypt::Asn1
     def initialize(value, options={})
       tag = options[:tag] || self.class.default_tag
       tag_class = options[:tag_class] || Der::TagClass::UNIVERSAL
-      @der = LazyEncodeablePrimitive.new(tag, tag_class, value, self)
+      @der = LazyEncodablePrimitive.new(tag, tag_class, value, self)
     end
 
     def tag
@@ -30,7 +30,7 @@ module Krypt::Asn1
 
       def from_der(der)
         obj = allocate
-        obj.instance_eval { @der = LazyParseablePrimitive.new(der, obj) }
+        obj.instance_eval { @der = LazyParsablePrimitive.new(der, obj) }
         obj
       end
 

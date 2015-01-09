@@ -7,13 +7,13 @@ module Krypt::Asn1
     alias indefinite? indefinite
 
     def initialize(options)
-      @length = options[:length]
       @indefinite = !!options[:indefinite]
+      @length = options[:length] unless @indefinite
       @encoding = options[:encoding]
     end
 
     def encoding
-      Der::LengthEncoder.encode(self)
+      @encoding ||= Der::LengthEncoder.encode(self)
     end
 
     def encode_to(io)

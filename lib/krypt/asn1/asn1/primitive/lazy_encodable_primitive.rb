@@ -1,5 +1,5 @@
 module Krypt::Asn1
-  class LazyEncodeablePrimitive
+  class LazyEncodablePrimitive
 
     attr_reader :tag, :parsed_value
 

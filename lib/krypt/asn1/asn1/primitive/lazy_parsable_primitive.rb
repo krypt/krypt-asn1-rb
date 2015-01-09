@@ -1,5 +1,5 @@
 module Krypt::Asn1
-  class LazyParseablePrimitive
+  class LazyParsablePrimitive
 
     def initialize(der, parser)
       @der = der

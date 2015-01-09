@@ -7,7 +7,7 @@ module Krypt::Asn1
 
     def sort_values(values)
       # preserve potentially wrong order for parsed SETs
-      return values if parsed?
+      return values.to_a if parsed?
       return values.sort if values.respond_to?(:sort)
       ary = []
       values.each { |v| ary << v }

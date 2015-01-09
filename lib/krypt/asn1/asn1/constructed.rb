@@ -3,33 +3,32 @@
 module Krypt::Asn1
   class Constructed < Asn1Base
 
-    def initialize(value, options={})
+    attr_reader :tag
+
+    def initialize(values, options={})
       t = options[:tag] || self.class.default_tag
       tc = options[:tag_class] || Der::TagClass::UNIVERSAL
       @tag = Der::Tag.new(tag: t, tag_class: tc, constructed: true)
-      @indefinite = !!options[:indefinite]
-      @value = value
+      @values = values
+
+      if options[:indefinite]
+        @length = Der::Length.new(indefinite: true)
+      else
+        @indefinite = false
+      end
     end
 
-    def tag
-      @tag.tag
+    def length
+      @length ||= create_length
     end
-
-    def tag_class
-      @tag.tag_class
-    end
-
-    def indefinite?; @indefinite; end
-
-    def constructed?; true; end
 
     def value
-      parse_value unless defined?(@value)
-      @value
+      parse_values
+      @values
     end
 
     def encode_to(io)
-      if @der_value
+      if defined?(@der_value)
         encode_cached_to(io)
       else
         encode_tlv_to(io)
@@ -43,7 +42,6 @@ module Krypt::Asn1
         obj.instance_eval do
           @tag = der.tag
           @length = der.length
-          @indefinite = der.length.indefinite?
           @der_value = der.value
           @parsed = true
         end
@@ -57,12 +55,25 @@ module Krypt::Asn1
     def parsed?; @parsed; end
 
     def sort_values(values)
-      values
+      values.to_a
     end
 
     private
 
-    def parse_value
+    def create_length
+      return if defined?(@length)
+      value = create_value
+      Der::Length.new(length: value.size)
+    end
+
+    def create_value
+      value_io = StringIO.new(String.new)
+      encode_values_to(value_io, false)
+      value_io.string
+    end
+
+    def parse_values
+      return if defined?(@values)
       parser = Parser.new
       objects = []
       io = StringIO.new(@der_value)
@@ -72,10 +83,10 @@ module Krypt::Asn1
       end
 
       # do not include END_OF_CONTENT
-      objects.pop if @indefinite
-
-      remove_instance_variable(:@der_value) # erase the cached encoding
-      @value = objects
+      objects.pop if @length.indefinite?
+      # erase the cached encoding
+      remove_instance_variable(:@der_value)
+      @values = objects
     end
 
     def encode_cached_to(io)
@@ -88,26 +99,24 @@ module Krypt::Asn1
       @tag.encode_to(io)
       if @length
         @length.encode_to(io)
-        encode_values_to(io)
+        encode_values_to(io, length.indefinite?)
       else
         @length = encode_lv_to(io)
       end
     end
 
     def encode_lv_to(io)
-      value_io = StringIO.new(String.new)
-      encode_values_to(value_io)
-      value = value_io.string
-      length = Der::Length.new(length: value.size, indefinite: @indefinite)
+      value = create_value
+      length = Der::Length.new(length: value.size)
       length.encode_to(io)
       io << value
       length
     end
 
-    def encode_values_to(io)
+    def encode_values_to(io, indefinite)
       sorted = sort_values(value)
       sorted.each { |v| v.encode_to(io) }
-      add_eoc(sorted, io) if indefinite?
+      add_eoc(sorted, io) if indefinite
     end
 
     def add_eoc(values, io)

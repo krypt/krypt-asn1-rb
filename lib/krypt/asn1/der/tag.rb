@@ -15,7 +15,7 @@ module Krypt::Asn1
     end
 
     def encoding
-      Der::TagEncoder.encode(self)
+      @encoding ||= Der::TagEncoder.encode(self)
     end
 
     def encode_to(io)
