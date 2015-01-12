@@ -1,0 +1,18 @@
+require 'time'
+
+module Krypt::Asn1
+  module Parser
+    module UtcTime
+
+      module_function
+
+      def parse_value(bytes)
+        DateTime.strptime(value, "%y%m%d%H%M%SZ") do |y|
+          y < 50 ? y + 2000 : y + 1900
+        end
+      end
+
+    end
+  end
+end
+

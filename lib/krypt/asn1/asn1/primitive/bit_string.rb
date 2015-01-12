@@ -7,30 +7,38 @@ module Krypt::Asn1
       BIT_STRING
     end
 
-    attr_reader :unused_bits
+    class Value
+
+      attr_reader :unused_bits, :value
+
+      def initialize(value, unused_bits=0)
+        @value = value
+        @unused_bits = unused_bits
+        unless (0..7).include?(@unused_bits)
+          raise "Unused bits must be 0..7"
+        end
+      end
+
+    end
 
     def initialize(value, options={})
-      super
-      @unused_bits = options[:unused_bits] || 0
+      unused_bits = options[:unused_bits] || 0
+      super(Value.new(value, unused_bits), options)
     end
 
-    def parse_value(bytes)
-      @unused_bits = bytes[0].ord
-      check_unused_bits
-      bytes[1..-1]
+    def unused_bits
+      super_value.unused_bits
     end
 
-    def encode_value(value)
-      check_unused_bits
-      value.prepend(@unused_bits.chr)
+
+    def value
+      super.value
     end
 
     private
 
-    def check_unused_bits
-      if @unused_bits < 0 || @unused_bits > 7
-        raise "Unused bits must be 0..7"
-      end
+    def super_value
+      Primitive.instance_method(:value).bind(self).call
     end
 
   end

@@ -1,5 +1,3 @@
-# encoding: BINARY
-
 module Krypt::Asn1
   class Null < Primitive
 
@@ -9,15 +7,6 @@ module Krypt::Asn1
 
     def initialize
       super(nil, tag: NULL, tag_class: Der::TagClass::UNIVERSAL)
-    end
-
-    def parse_value(bytes)
-      raise "NULL must not contain a value: #{bytes}" if bytes
-      nil
-    end
-
-    def encode_value(value)
-      nil
     end
 
   end

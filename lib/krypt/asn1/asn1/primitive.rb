@@ -1,55 +1,42 @@
-require_relative 'primitive/lazy_encodable_primitive'
-require_relative 'primitive/lazy_parsable_primitive'
+module Krypt
+  module Asn1
+    class Primitive < Asn1Base
 
-module Krypt::Asn1
-  class Primitive < Asn1Base
+      def initialize(value, options={})
+        @der = Asn1::Encoder.new_encodable_primitive(self, value, options)
+      end
 
-    def initialize(value, options={})
-      tag = options[:tag] || self.class.default_tag
-      tag_class = options[:tag_class] || Der::TagClass::UNIVERSAL
-      @der = LazyEncodablePrimitive.new(tag, tag_class, value, self)
-    end
+      def tag
+        @der.tag
+      end
 
-    def tag
-      @der.tag
-    end
+      def length
+        @der.length
+      end
 
-    def length
-      @der.length
-    end
+      def value
+        @der.parsed_value
+      end
 
-    def value
-      @der.parsed_value
-    end
+      def encode_to(io)
+        @der.encode_to(io)
+      end
 
-    def encode_to(io)
-      @der.encode_to(io)
-    end
+      def accept(visitor)
+        visitor.visit_primitive(self)
+      end
 
-    def accept(visitor)
-      visitor.visit_primitive(self)
-    end
+      class << self
 
-    class << self
+        def from_der(der)
+          obj = allocate
+          obj.instance_eval { @der = Asn1::Parser.new_parsable_primitive(obj, der) }
+          obj
+        end
 
-      def from_der(der)
-        obj = allocate
-        obj.instance_eval { @der = LazyParsablePrimitive.new(der, obj) }
-        obj
       end
 
     end
-
-    protected
-
-    def encode_value(value)
-      value
-    end
-
-    def parse_value(value)
-      value
-    end
-
   end
 end
 

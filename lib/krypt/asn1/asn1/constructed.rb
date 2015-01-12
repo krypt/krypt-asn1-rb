@@ -84,11 +84,10 @@ module Krypt::Asn1
 
     def parse_values
       return if defined?(@values)
-      parser = Parser.new
       objects = []
       io = StringIO.new(@der_value)
 
-      while object = parser.parse(io)
+      while object = Parser.parse(io)
         objects << object
       end
 

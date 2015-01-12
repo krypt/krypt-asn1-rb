@@ -1,8 +1,5 @@
-require_relative 'string_codec'
-
 module Krypt::Asn1
   class NumericString < Primitive
-    include StringCodec
 
     def self.default_tag
       NUMERIC_STRING
