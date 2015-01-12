@@ -9,22 +9,13 @@ module Krypt::Asn1
       return Der::Length::INDEFINITE_LENGTH_MASK.chr if length.indefinite?
 
       len = length.length
-
-      if len < 128
-        len.chr
-      else
-        complex_length(len)
-      end
+      len < 128 ? len.chr : complex_length(len)
     end
 
     private; module_function
 
     def complex_length(len)
       # TODO raise error if bytes.size too large
-      length_bytes(len)
-    end
-
-    def length_bytes(len)
       num_bytes = bytelen(len) | Der::Length::INDEFINITE_LENGTH_MASK
       buf = num_bytes.chr
 
