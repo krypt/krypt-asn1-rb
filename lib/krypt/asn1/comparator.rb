@@ -16,7 +16,7 @@ module Krypt::Asn1
     private; module_function
 
     def parse_header(der)
-      h = Der::HeaderParser.new(der).next
+      h = Der::Parser.new(der).next_header
       raise "Error while comparing values" unless h
       h
     end

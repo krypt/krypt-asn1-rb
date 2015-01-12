@@ -4,7 +4,7 @@ module Krypt::Asn1
   class Parser
 
     def parse(io_or_string)
-      header = Der::HeaderParser.new(io_or_string).next
+      header = Der::Parser.new(io_or_string).next_header
       return nil unless header
       interpret(Der.new(header.tag, header.length, header.value))
     end

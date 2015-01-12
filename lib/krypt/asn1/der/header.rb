@@ -3,10 +3,10 @@ module Krypt::Asn1
 
     attr_reader :tag, :length
 
-    def initialize(tag, length, io)
+    def initialize(tag, length, parser)
       @tag = tag
       @length = length
-      @io = io
+      @parser = parser
     end
 
     def value
@@ -15,18 +15,10 @@ module Krypt::Asn1
     end
 
     def value_io
-      @reader ||= new_reader
+      @reader ||= @parser.value_parser(self)
     end
 
     private
-
-    def new_reader
-      if @length.indefinite?
-        Der::IndefiniteReader.new(@io)
-      else
-        Der::DefiniteReader.new(@io, @length.length)
-      end
-    end
 
     def read_value
       return if defined?(@value)

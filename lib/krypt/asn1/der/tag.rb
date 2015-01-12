@@ -5,7 +5,7 @@ module Krypt::Asn1
     COMPLEX_TAG_MASK = 0x1f
 
     attr_reader :tag, :tag_class, :constructed
-    alias constructed? constructed
+    alias_method :constructed?, :constructed
 
     def initialize(options)
       @tag = options[:tag]
@@ -15,11 +15,7 @@ module Krypt::Asn1
     end
 
     def encoding
-      @encoding ||= Der::TagEncoder.encode(self)
-    end
-
-    def encode_to(io)
-      io << encoding
+      @encoding ||= Der::Encoder.encode_tag(self)
     end
 
   end

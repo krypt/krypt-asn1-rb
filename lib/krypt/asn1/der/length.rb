@@ -4,7 +4,7 @@ module Krypt::Asn1
     INDEFINITE_LENGTH_MASK = 0x80
 
     attr_reader :length, :indefinite
-    alias indefinite? indefinite
+    alias_method :indefinite?, :indefinite
 
     def initialize(options)
       @indefinite = !!options[:indefinite]
@@ -13,11 +13,7 @@ module Krypt::Asn1
     end
 
     def encoding
-      @encoding ||= Der::LengthEncoder.encode(self)
-    end
-
-    def encode_to(io)
-      io << encoding
+      @encoding ||= Der::Encoder.encode_length(self)
     end
 
   end

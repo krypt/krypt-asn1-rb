@@ -100,15 +100,15 @@ module Krypt::Asn1
     end
 
     def encode_cached_to(io)
-      @tag.encode_to(io)
-      @length.encode_to(io)
+      io << @tag.encoding
+      io << @length.encoding
       io << @der_value
     end
 
     def encode_tlv_to(io)
-      @tag.encode_to(io)
+      io << @tag.encoding
       if @length
-        @length.encode_to(io)
+        io << @length.encoding
         encode_values_to(io, length.indefinite?)
       else
         @length = encode_lv_to(io)
@@ -118,7 +118,7 @@ module Krypt::Asn1
     def encode_lv_to(io)
       value = create_value
       length = Der::Length.new(length: value.size)
-      length.encode_to(io)
+      io << length.encoding
       io << value
       length
     end

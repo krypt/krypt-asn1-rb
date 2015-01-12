@@ -2,7 +2,6 @@
 
 module Krypt::Asn1
   class Der
-    include IOEncodable
 
     attr_reader :tag, :length, :value
 
@@ -16,10 +15,12 @@ module Krypt::Asn1
       end
     end
 
+    def to_der
+      Der::Encoder.to_der(self)
+    end
+
     def encode_to(io)
-      @tag.encode_to(io)
-      @length.encode_to(io)
-      io << @value
+      Der::Encoder.encode_to(io, self)
     end
 
     private
