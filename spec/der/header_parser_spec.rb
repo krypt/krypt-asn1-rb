@@ -18,7 +18,7 @@ RSpec.describe Krypt::Asn1::Der::HeaderParser do
           let(:enc) { "\x02\x01\x2A" }
 
           context 'tag' do
-            subject { hp.new(enc).next.create_der.tag }
+            subject { hp.new(enc).next.tag }
 
             it "has an INTEGER tag" do
               expect(subject.tag).to eq(Krypt::Asn1::INTEGER)
@@ -36,7 +36,7 @@ RSpec.describe Krypt::Asn1::Der::HeaderParser do
           end
 
           context 'length' do
-            subject { hp.new(enc).next.create_der.length }
+            subject { hp.new(enc).next.length }
 
             it "has length 1" do
               expect(subject.length).to eq(1)
@@ -50,7 +50,7 @@ RSpec.describe Krypt::Asn1::Der::HeaderParser do
           end
 
           context 'value' do
-            subject { hp.new(enc).next.create_der.value }
+            subject { hp.new(enc).next.value }
 
             it { is_expected.to eq("\x2A") }
           end
@@ -60,7 +60,7 @@ RSpec.describe Krypt::Asn1::Der::HeaderParser do
           let(:enc) { "\x04\x82\x00\x01" << ("\xFF" * 256) }
 
           context 'tag' do
-            subject { hp.new(enc).next.create_der.tag }
+            subject { hp.new(enc).next.tag }
 
             it "has an OCTET_STRING tag" do
               expect(subject.tag).to eq(Krypt::Asn1::OCTET_STRING)
@@ -78,7 +78,7 @@ RSpec.describe Krypt::Asn1::Der::HeaderParser do
           end
 
           context 'length' do
-            subject { hp.new(enc).next.create_der.length }
+            subject { hp.new(enc).next.length }
 
             it "has length 256" do
               expect(subject.length).to eq(256)
@@ -92,7 +92,7 @@ RSpec.describe Krypt::Asn1::Der::HeaderParser do
           end
 
           context 'value' do
-            subject { hp.new(enc).next.create_der.value }
+            subject { hp.new(enc).next.value }
 
             it { is_expected.to eq("\xFF" * 256) }
           end
@@ -102,7 +102,7 @@ RSpec.describe Krypt::Asn1::Der::HeaderParser do
           let(:enc) { "\xDF\x81\x16\x01\x01" }
 
           context 'tag' do
-            subject { hp.new(enc).next.create_der.tag }
+            subject { hp.new(enc).next.tag }
 
             it "has a tag of 150" do
               expect(subject.tag).to eq(150)
@@ -120,7 +120,7 @@ RSpec.describe Krypt::Asn1::Der::HeaderParser do
           end
 
           context 'length' do
-            subject { hp.new(enc).next.create_der.length }
+            subject { hp.new(enc).next.length }
 
             it "has length 1" do
               expect(subject.length).to eq(1)
@@ -134,7 +134,7 @@ RSpec.describe Krypt::Asn1::Der::HeaderParser do
           end
 
           context 'value' do
-            subject { hp.new(enc).next.create_der.value }
+            subject { hp.new(enc).next.value }
 
             it { is_expected.to eq("\x01") }
           end
@@ -144,7 +144,7 @@ RSpec.describe Krypt::Asn1::Der::HeaderParser do
           let(:enc) { "\x80\x01\x01" }
 
           context 'tag' do
-            subject { hp.new(enc).next.create_der.tag }
+            subject { hp.new(enc).next.tag }
 
             it "has a tag of 0" do
               expect(subject.tag).to eq(0)
@@ -166,7 +166,7 @@ RSpec.describe Krypt::Asn1::Der::HeaderParser do
           let(:enc) { "\xA0\x03\x02\x01\x00" }
 
           context 'tag' do
-            subject { hp.new(enc).next.create_der.tag }
+            subject { hp.new(enc).next.tag }
 
             it "has a tag of 0" do
               expect(subject.tag).to eq(0)
@@ -188,7 +188,7 @@ RSpec.describe Krypt::Asn1::Der::HeaderParser do
           let(:enc) { "\x40\x01\x00" }
 
           context 'tag' do
-            subject { hp.new(enc).next.create_der.tag }
+            subject { hp.new(enc).next.tag }
 
             it "has a tag of 0" do
               expect(subject.tag).to eq(0)
@@ -210,7 +210,7 @@ RSpec.describe Krypt::Asn1::Der::HeaderParser do
           let(:enc) { "\xC0\x01\x00" }
 
           context 'tag' do
-            subject { hp.new(enc).next.create_der.tag }
+            subject { hp.new(enc).next.tag }
 
             it "has a tag of 0" do
               expect(subject.tag).to eq(0)
@@ -241,7 +241,7 @@ RSpec.describe Krypt::Asn1::Der::HeaderParser do
         let(:enc) { "\x24\x80\x04\x01\x01\x04\x01\x02\x00\x00" }
 
         context 'tag' do
-          subject { hp.new(enc).next.create_der.tag }
+          subject { hp.new(enc).next.tag }
 
           it "has OCTET_STRING tag" do
             expect(subject.tag).to eq(Krypt::Asn1::OCTET_STRING)
@@ -259,7 +259,7 @@ RSpec.describe Krypt::Asn1::Der::HeaderParser do
         end
 
         context 'length' do
-          subject { hp.new(enc).next.create_der.length }
+          subject { hp.new(enc).next.length }
 
           it "has length of nil" do
             expect(subject.length).to be_nil
@@ -273,7 +273,7 @@ RSpec.describe Krypt::Asn1::Der::HeaderParser do
         end
 
         context 'value' do
-          subject { hp.new(enc).next.create_der.value }
+          subject { hp.new(enc).next.value }
 
           it { is_expected.to eq("\x04\x01\x01\x04\x01\x02\x00\x00") }
         end
@@ -289,7 +289,7 @@ RSpec.describe Krypt::Asn1::Der::HeaderParser do
       let(:enc) { StringIO.new("\x01\x01\xFF") }
 
       context 'tag' do
-        subject { hp.new(enc).next.create_der.tag }
+        subject { hp.new(enc).next.tag }
 
         it "has BOOLEAN tag" do
           expect(subject.tag).to eq(Krypt::Asn1::BOOLEAN)
@@ -307,7 +307,7 @@ RSpec.describe Krypt::Asn1::Der::HeaderParser do
       end
 
       context 'length' do
-        subject { hp.new(enc).next.create_der.length }
+        subject { hp.new(enc).next.length }
 
         it "has length 1" do
           expect(subject.length).to eq(1)
@@ -321,7 +321,7 @@ RSpec.describe Krypt::Asn1::Der::HeaderParser do
       end
 
       context 'value' do
-        subject { hp.new(enc).next.create_der.value }
+        subject { hp.new(enc).next.value }
 
         it { is_expected.to eq("\xFF") }
       end

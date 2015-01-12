@@ -17,7 +17,7 @@ module Krypt::Asn1
       return nil if @io.eof?
       tag = parse_tag
       length = parse_length
-      Der::Header.new(tag, length, self)
+      Der::Header.new(tag, length, @io)
     end
 
     private
@@ -54,35 +54,37 @@ module Krypt::Asn1
     end
 
     def primitive_tag(b)
-      with_tc_and_cons(b) do |tc, cons|
-        tag = b & Der::Tag::COMPLEX_TAG_MASK
-        Der::Tag.new(tag: tag, tag_class: tc, constructed: cons, encoding: b.chr)
-      end
+      tc = b & Der::TagClass::PRIVATE
+      cons = match(b, Der::Tag::CONSTRUCTED_MASK)
+
+      tag = b & Der::Tag::COMPLEX_TAG_MASK
+      Der::Tag.new(tag: tag, tag_class: tc, constructed: cons, encoding: b.chr)
     end
 
     def complex_tag(b)
-      with_tc_and_cons(b) do |tc, cons|
-        tag = 0
-        buf = b.chr
-        b = @io.readbyte
-        if b == Der::Length::INDEFINITE_LENGTH_MASK
-          raise "Bits 7 to 1 of the first subsequent octet shall not be 0 for complex tag encodings"
-        end
+      tc = b & Der::TagClass::PRIVATE
+      cons = match(b, Der::Tag::CONSTRUCTED_MASK)
 
-        update = lambda do
-          tag <<= 7
-          tag |= (b & 0x7f)
-          buf << b
-        end
-
-        while match(b, Der::Length::INDEFINITE_LENGTH_MASK)
-          update.call
-          b = @io.readbyte
-        end
-
-        update.call
-        Der::Tag.new(tag: tag, tag_class: tc, constructed: cons, encoding: buf)
+      tag = 0
+      buf = b.chr
+      b = @io.readbyte
+      if b == Der::Length::INDEFINITE_LENGTH_MASK
+        raise "Bits 7 to 1 of the first subsequent octet shall not be 0 for complex tag encodings"
       end
+
+      update = lambda do
+        tag <<= 7
+        tag |= (b & 0x7f)
+        buf << b
+      end
+
+      while match(b, Der::Length::INDEFINITE_LENGTH_MASK)
+        update.call
+        b = @io.readbyte
+      end
+
+      update.call
+      Der::Tag.new(tag: tag, tag_class: tc, constructed: cons, encoding: buf)
     end
 
     def complex_definite_length(b)

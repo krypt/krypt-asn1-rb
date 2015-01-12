@@ -3,8 +3,8 @@
 module Krypt::Asn1
   class Der::IndefiniteReader
 
-    def initialize(header_parser)
-      @parser = header_parser
+    def initialize(io)
+      @parser = Der::HeaderParser.new(io)
       @state = :read_header
       @header_offset = 0
     end

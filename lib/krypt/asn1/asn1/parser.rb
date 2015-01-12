@@ -6,7 +6,7 @@ module Krypt::Asn1
     def parse(io_or_string)
       header = Der::HeaderParser.new(io_or_string).next
       return nil unless header
-      interpret(header.create_der)
+      interpret(Der.new(header.tag, header.length, header.value))
     end
 
     private
@@ -51,21 +51,15 @@ module Krypt::Asn1
       tag = der.tag
       t = tag.tag
       tc = tag.tag_class
-      validate(t, tc)
 
       if tc == Der::TagClass::UNIVERSAL
+        raise "Invalid tag for UNIVERSAL class: #{tag}" if t > 30
         c = UNIVERSAL_CLASSES[t]
         return c.from_der(der) if c
       end
 
       fallback = tag.constructed? ? Constructed : Primitive
       fallback.from_der(der)
-    end
-
-    def validate(tag, tc)
-      if tag > 30 && tc == Der::TagClass::UNIVERSAL
-        raise "Invalid tag for UNIVERSAL class: #{tag}"
-      end
     end
 
   end

@@ -7,6 +7,8 @@ module Krypt::Asn1
       BIT_STRING
     end
 
+    attr_reader :unused_bits
+
     def initialize(value, options={})
       super
       @unused_bits = options[:unused_bits] || 0
