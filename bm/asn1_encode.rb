@@ -81,6 +81,11 @@ Benchmark.bm do |bm|
       Krypt::Asn1::Sequence.new(krypt_content).to_der
     end
   end
+  bm.report("Krypt encode SET generated n times(n=#{n}) ") do
+    n.times do
+      Krypt::Asn1::Set.new(krypt_content).to_der
+    end
+  end
   bm.report("Krypt to IO generated n times(n=#{n}) ") do
     n.times do
       Krypt::Asn1::Sequence.new(krypt_content).encode_to(StringIO.new)

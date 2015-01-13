@@ -4,22 +4,15 @@ module Krypt::Asn1
     module_function
 
     def compare(der1, der2)
-      h1 = parse_header(der1)
-      h2 = parse_header(der2)
-
-      result = compare_tags(h1.tag, h2.tag)
+      result = compare_tags(der1.tag, der2.tag)
       return result if result
-
-      compare_lengths(der1, h1.length.length, der2, h2.length.length)
+      result = compare_encoding(der1.length.encoding, der2.length.encoding)
+      return result if result
+      result = compare_encoding(der1.der_value, der2.der_value)
+      result ? result : 0
     end
 
     private; module_function
-
-    def parse_header(der)
-      h = Der::Parser.new(der).next_header
-      raise "Error while comparing values" unless h
-      h
-    end
 
     def compare_tags(tag1, tag2)
       t1 = tag1.tag
@@ -31,15 +24,18 @@ module Krypt::Asn1
       return 1 if t1 > t2
     end
 
-    def compare_lengths(der1, l1, der2, l2)
+    def compare_encoding(e1, e2)
+      l1 = e1.size
+      l2 = e2.size
       min = l1 < l2 ? l1 : l2
       min.times do |i|
-        b1 = der1.getbyte(i)
-        b2 = der2.getbyte(i)
+        b1 = e1.getbyte(i)
+        b2 = e2.getbyte(i)
         return b1 < b2 ? -1 : 1 if b1 != b2
       end
-      return 0 if l1 == l2
-      l1 < l2 ? -1 : 1
+
+      return -1 if l1 < l2
+      return 1 if l1 > l2
     end
 
     def eoc?(t, tc)

@@ -18,6 +18,10 @@ module Krypt::Asn1
       @asn1.parsed_value
     end
 
+    def der_value
+      @asn1.value
+    end
+
     def to_der
       io = StringIO.new(String.new)
       encode_to(io)
@@ -28,14 +32,9 @@ module Krypt::Asn1
       @asn1.encode_to(io)
     end
 
-    def ==(other)
-      return false unless other.respond_to?(:to_der)
-      to_der == other.to_der
-    end
-
     def <=>(other)
       return nil unless other.respond_to?(:to_der)
-      Comparator.compare(to_der, other.to_der)
+      Comparator.compare(self, other)
     end
 
     def to_s
