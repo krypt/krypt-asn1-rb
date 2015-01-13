@@ -3,7 +3,7 @@
 module Krypt::Asn1
   class BitString < Primitive
 
-    def self.default_tag
+    def default_tag
       BIT_STRING
     end
 

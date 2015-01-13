@@ -7,7 +7,7 @@ module Krypt::Asn1
       module_function
 
       def parse_value(bytes)
-        DateTime.strptime(value, "%Y%m%d%H%M%S%Z")
+        DateTime.strptime(bytes, "%Y%m%d%H%M%S%Z")
       end
 
     end

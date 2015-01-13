@@ -1,7 +1,7 @@
 module Krypt::Asn1
   class T61String < Primitive
 
-    def self.default_tag
+    def default_tag
       T61_STRING
     end
 

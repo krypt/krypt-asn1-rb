@@ -7,7 +7,7 @@ module Krypt::Asn1
       module_function
 
       def parse_value(bytes)
-        DateTime.strptime(value, "%y%m%d%H%M%SZ") do |y|
+        DateTime.strptime(bytes, "%y%m%d%H%M%SZ") do |y|
           y < 50 ? y + 2000 : y + 1900
         end
       end

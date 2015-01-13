@@ -1,7 +1,7 @@
 module Krypt::Asn1
   class BmpString < Primitive
 
-    def self.default_tag
+    def default_tag
       BMP_STRING
     end
 

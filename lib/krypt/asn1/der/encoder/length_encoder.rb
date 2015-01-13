@@ -16,15 +16,15 @@ module Krypt::Asn1
 
     def complex_length(len)
       # TODO raise error if bytes.size too large
-      num_bytes = bytelen(len) | Der::Length::INDEFINITE_LENGTH_MASK
-      buf = num_bytes.chr
+      num_bytes = bytelen(len)
+      buf = String.new
 
       while len > 0
-        buf << (len & 0xff).chr
+        buf.prepend((len & 0xff).chr)
         len >>= 8
       end
 
-      buf
+      buf.prepend((num_bytes | Der::Length::INDEFINITE_LENGTH_MASK).chr)
     end
 
     def bytelen(value)

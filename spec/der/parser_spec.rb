@@ -56,8 +56,8 @@ RSpec.describe Krypt::Asn1::Der::Parser do
           end
         end
 
-        context ':UNIVERSAL OCTET STRING complex length 2 bytes' do
-          let(:enc) { "\x04\x82\x00\x01" << ("\xFF" * 256) }
+        context ':UNIVERSAL OCTET STRING complex length 2 bytes (256)' do
+          let(:enc) { "\x04\x82\x01\x00" << ("\xFF" * 256) }
 
           context 'tag' do
             subject { parser.new(enc).next_header.tag }
@@ -86,8 +86,8 @@ RSpec.describe Krypt::Asn1::Der::Parser do
             it "is definite" do
               expect(subject.indefinite?).to eq(false)
             end
-            it 'encodes to \x82\x00\x01' do
-              expect(subject.encoding).to eq("\x82\x00\x01")
+            it 'encodes to \x82\x01\x00' do
+              expect(subject.encoding).to eq("\x82\x01\x00")
             end
           end
 
@@ -95,6 +95,48 @@ RSpec.describe Krypt::Asn1::Der::Parser do
             subject { parser.new(enc).next_header.value }
 
             it { is_expected.to eq("\xFF" * 256) }
+          end
+        end
+
+        context ':UNIVERSAL OCTET STRING complex length 2 bytes (1980)' do
+          let(:enc) { "\x04\x82\x07\xBC" << ("\xFF" * 1980) }
+
+          context 'tag' do
+            subject { parser.new(enc).next_header.tag }
+
+            it "has an OCTET_STRING tag" do
+              expect(subject.tag).to eq(Krypt::Asn1::OCTET_STRING)
+            end
+            it "is primitive" do
+              expect(subject.constructed?).to eq(false)
+            end
+            it 'encodes to \x04' do
+              expect(subject.encoding).to eq("\x04")
+            end
+
+            it "has UNIVERSAL tag class" do
+              expect(subject.tag_class).to eq(tag_class::UNIVERSAL)
+            end
+          end
+
+          context 'length' do
+            subject { parser.new(enc).next_header.length }
+
+            it "has length 1980" do
+              expect(subject.length).to eq(1980)
+            end
+            it "is definite" do
+              expect(subject.indefinite?).to eq(false)
+            end
+            it 'encodes to \x82\x07\xBC' do
+              expect(subject.encoding).to eq("\x82\x07\xBC")
+            end
+          end
+
+          context 'value' do
+            subject { parser.new(enc).next_header.value }
+
+            it { is_expected.to eq("\xFF" * 1980) }
           end
         end
 

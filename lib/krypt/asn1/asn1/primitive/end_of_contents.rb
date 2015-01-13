@@ -1,7 +1,7 @@
 module Krypt::Asn1
   class EndOfContents < Primitive
 
-    def self.default_tag
+    def default_tag
       END_OF_CONTENTS
     end
 

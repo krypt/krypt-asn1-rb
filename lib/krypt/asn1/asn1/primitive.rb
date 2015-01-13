@@ -3,34 +3,18 @@ module Krypt
     class Primitive < Asn1Base
 
       def initialize(value, options={})
-        @der = Asn1::Encoder.new_encodable_primitive(self, value, options)
-      end
-
-      def tag
-        @der.tag
-      end
-
-      def length
-        @der.length
-      end
-
-      def value
-        @der.parsed_value
-      end
-
-      def encode_to(io)
-        @der.encode_to(io)
+        @asn1 = Asn1::Encoder.new_encodable_primitive(self, value, options)
       end
 
       def accept(visitor)
-        visitor.visit_primitive(self)
+        visitor.primitive(self)
       end
 
       class << self
 
         def from_der(der)
           obj = allocate
-          obj.instance_eval { @der = Asn1::Parser.new_parsable_primitive(obj, der) }
+          obj.instance_eval { @asn1 = Asn1::Parser.new_parsable_primitive(obj, der) }
           obj
         end
 

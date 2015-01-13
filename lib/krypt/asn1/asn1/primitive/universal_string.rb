@@ -1,7 +1,7 @@
 module Krypt::Asn1
   class UniversalString < Primitive
 
-    def self.default_tag
+    def default_tag
       UNIVERSAL_STRING
     end
 

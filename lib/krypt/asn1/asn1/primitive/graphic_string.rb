@@ -1,7 +1,7 @@
 module Krypt::Asn1
   class GraphicString < Primitive
 
-    def self.default_tag
+    def default_tag
       GRAPHIC_STRING
     end
 

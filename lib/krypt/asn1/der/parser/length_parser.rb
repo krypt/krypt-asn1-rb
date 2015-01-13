@@ -27,11 +27,13 @@ module Krypt::Asn1
 
       len = 0
       num_bytes = b & 0x7f
-      buf = b.chr << io.read(num_bytes)
+      buf = b.chr
 
-      num_bytes.times do |i|
+      num_bytes.times do
+        b = io.readbyte
         len <<= 8
-        len |= buf.getbyte(num_bytes - i)
+        len |= b
+        buf << b
       end
 
       Der::Length.new(length: len, encoding: buf)

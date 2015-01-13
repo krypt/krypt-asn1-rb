@@ -1,7 +1,7 @@
 module Krypt::Asn1
   class Null < Primitive
 
-    def self.default_tag
+    def default_tag
       NULL
     end
 

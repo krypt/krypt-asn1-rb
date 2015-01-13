@@ -4,6 +4,7 @@ require_relative 'parser/default_parser'
 require_relative 'parser/end_of_contents'
 require_relative 'parser/generalized_time'
 require_relative 'parser/integer_parser'
+require_relative 'parser/lazy_parsable_constructed'
 require_relative 'parser/lazy_parsable_primitive'
 require_relative 'parser/null'
 require_relative 'parser/object_id'
@@ -91,6 +92,10 @@ module Krypt
         Parser::LazyParsablePrimitive.new(object, der)
       end
 
+      def new_parsable_constructed(object, der)
+        Parser::LazyParsableConstructed.new(der)
+      end
+
       def parse(io_or_string)
         header = Der::Parser.new(io_or_string).next_header
         return nil unless header
@@ -98,7 +103,9 @@ module Krypt
       end
 
       def parse_value(object, bytes)
-        PARSERS[object.class.default_tag].parse_value(bytes)
+        default_tag = object.default_tag
+        parser = default_tag ? PARSERS[default_tag] : DefaultParser
+        parser.parse_value(bytes)
       end
 
       private; module_function
