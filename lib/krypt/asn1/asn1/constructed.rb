@@ -1,125 +1,41 @@
 # encoding: BINARY
 
-module Krypt::Asn1
-  class Constructed < Asn1Base
+module Krypt
+  module Asn1
+    class Constructed < Asn1Base
+      include Enumerable
 
-    def initialize(value, options={})
-      t = options[:tag] || self.class.default_tag
-      tc = options[:tag_class] || :UNIVERSAL
-      @tag = Der::Tag.new(tag: t, tag_class: tc, constructed: true)
-      @indefinite = !!options[:indefinite]
-      @value = value
-    end
-
-    def tag
-      @tag.tag
-    end
-
-    def tag_class
-      @tag.tag_class.tag_class
-    end
-
-    def indefinite?; @indefinite; end
-
-    def constructed?; true; end
-
-    def value
-      unless defined?(@value)
-        @value = parse_value(@der_value)
-        @der_value = nil # erase the cached encoding
+      def initialize(values, options={})
+        @asn1 = Asn1::Encoder.new_encodable_constructed(self, values, options)
       end
-      @value
-    end
 
-    def encode_to(io)
-      if @der_value
-        encode_cached_to(io)
-      else
-        encode_tlv_to(io)
+      def each(&block)
+        value.each(&block)
       end
-    end
 
-    class << self
+      def size
+        value.size
+      end
 
-      def from_der(der)
-        obj = allocate
-        obj.instance_eval do
-          @tag = der.tag
-          @length = der.length
-          @indefinite = der.length.indefinite?
-          @der_value = der.value
-          @parsed = true
+      def accept(visitor)
+        visitor.pre_constructed(self)
+        each { |v| v.accept(visitor) }
+        visitor.post_constructed(self)
+      end
+
+      class << self
+
+        def from_der(der)
+          obj = allocate
+          obj.instance_eval do
+            @asn1 = Asn1::Parser.new_parsable_constructed(obj, der)
+          end
+          obj
         end
-        obj
+
       end
 
     end
-
-    protected
-
-    def parsed?; @parsed; end
-
-    def sort_values(values)
-      values
-    end
-
-    private
-
-    def parse_value(bytes)
-      parser = Parser.new
-      objects = []
-      io = StringIO.new(bytes)
-
-      while object = parser.parse(io)
-        objects << object
-      end
-
-      # do not include END_OF_CONTENT
-      objects.pop if @indefinite
-
-      objects
-    end
-
-    def encode_cached_to(io)
-      @tag.encode_to(io)
-      @length.encode_to(io)
-      io << @der_value
-    end
-
-    def encode_tlv_to(io)
-      @tag.encode_to(io)
-      if @length
-        @length.encode_to(io)
-        encode_values_to(io)
-      else
-        compute_lv_to(io)
-      end
-    end
-
-    def compute_lv_to(io)
-      value_io = StringIO.new(String.new)
-      encode_values_to(value_io)
-      value = value_io.string
-      @length = Der::Length.new(length: value.size, indefinite: @indefinite)
-      @length.encode_to(io)
-      io << value
-    end
-
-    def encode_values_to(io)
-      sorted = sort_values(value)
-      sorted.each { |v| v.encode_to(io) }
-      add_eoc(sorted, io) if indefinite?
-    end
-
-    def add_eoc(values, io)
-      last = values.last
-      # just add if it was not present in the values
-      needs_eoc = last.nil? ||
-                  !(last.tag == END_OF_CONTENTS && last.tag_class == :UNIVERSAL)
-
-      EndOfContents.new.encode_to(io) if needs_eoc
-    end
-
   end
 end
 

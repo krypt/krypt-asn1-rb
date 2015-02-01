@@ -1,70 +1,26 @@
-module Krypt::Asn1
-  class Primitive < Asn1Base
+module Krypt
+  module Asn1
+    class Primitive < Asn1Base
 
-    attr_reader :tag, :tag_class
-
-    def initialize(value, options={})
-      @tag = options[:tag] || self.class.default_tag
-      @tag_class = options[:tag_class] || :UNIVERSAL
-      @value = value
-    end
-
-    def indefinite?; false; end
-
-    def constructed?; false; end
-
-    def value
-      unless defined?(@value)
-        @value = parse_value(@der.value)
+      def initialize(value, options={})
+        @asn1 = Asn1::Encoder.new_encodable_primitive(self, value, options)
       end
-      @value
-    end
 
-    def encode_to(io)
-      unless defined?(@der)
-        @der = create_der
+      def accept(visitor)
+        visitor.primitive(self)
       end
-      @der.encode_to(io)
-    end
 
-    class << self
+      class << self
 
-      def from_der(der)
-        obj = allocate
-        obj.instance_eval do
-          t = der.tag
-          @tag = t.tag
-          @tag_class = t.tag_class.tag_class
-          @der = der
+        def from_der(der)
+          obj = allocate
+          obj.instance_eval { @asn1 = Asn1::Parser.new_parsable_primitive(obj, der) }
+          obj
         end
-        obj
-      end
 
-      def of(value)
-        new(value)
       end
 
     end
-
-    protected
-
-    def parse_value(bytes)
-      bytes
-    end
-
-    def encode_value(value)
-      value
-    end
-
-    private
-
-    def create_der
-      tag = Der::Tag.new(tag: @tag, tag_class: @tag_class)
-      value = encode_value(@value)
-      length = Der::Length.new(length: value ? value.size : 0)
-      Der.new(tag, length, value)
-    end
-
   end
 end
 

@@ -2,13 +2,13 @@
 
 require 'spec_helper'
 
-RSpec.describe Krypt::Asn1::Der::HeaderParser do
+RSpec.describe Krypt::Asn1::Der::Parser do
 
-  let(:hp) { Krypt::Asn1::Der::HeaderParser }
+  let(:parser) { Krypt::Asn1::Der::Parser }
   let(:tag) { Krypt::Asn1::Der::Tag }
   let(:tag_class) { Krypt::Asn1::Der::TagClass }
 
-  describe '#next' do
+  describe '#next_header' do
 
     context 'definite length' do
 
@@ -18,7 +18,7 @@ RSpec.describe Krypt::Asn1::Der::HeaderParser do
           let(:enc) { "\x02\x01\x2A" }
 
           context 'tag' do
-            subject { hp.new(enc).next.asn1_object.tag }
+            subject { parser.new(enc).next_header.tag }
 
             it "has an INTEGER tag" do
               expect(subject.tag).to eq(Krypt::Asn1::INTEGER)
@@ -29,21 +29,14 @@ RSpec.describe Krypt::Asn1::Der::HeaderParser do
             it 'encodes to \x02' do
               expect(subject.encoding).to eq("\x02")
             end
-          end
-
-          context 'tag_class' do
-            subject { hp.new(enc).next.asn1_object.tag.tag_class }
 
             it "has UNIVERSAL tag class" do
-              expect(subject.tag_class).to eq(:UNIVERSAL)
-            end
-            it "has UNIVERSAL mask" do
-              expect(subject.mask).to eq(tag_class::UNIVERSAL)
+              expect(subject.tag_class).to eq(tag_class::UNIVERSAL)
             end
           end
 
           context 'length' do
-            subject { hp.new(enc).next.asn1_object.length }
+            subject { parser.new(enc).next_header.length }
 
             it "has length 1" do
               expect(subject.length).to eq(1)
@@ -57,17 +50,17 @@ RSpec.describe Krypt::Asn1::Der::HeaderParser do
           end
 
           context 'value' do
-            subject { hp.new(enc).next.asn1_object.value }
+            subject { parser.new(enc).next_header.value }
 
             it { is_expected.to eq("\x2A") }
           end
         end
 
-        context ':UNIVERSAL OCTET STRING complex length 2 bytes' do
+        context ':UNIVERSAL OCTET STRING complex length 2 bytes (256)' do
           let(:enc) { "\x04\x82\x01\x00" << ("\xFF" * 256) }
 
           context 'tag' do
-            subject { hp.new(enc).next.asn1_object.tag }
+            subject { parser.new(enc).next_header.tag }
 
             it "has an OCTET_STRING tag" do
               expect(subject.tag).to eq(Krypt::Asn1::OCTET_STRING)
@@ -78,21 +71,14 @@ RSpec.describe Krypt::Asn1::Der::HeaderParser do
             it 'encodes to \x04' do
               expect(subject.encoding).to eq("\x04")
             end
-          end
-
-          context 'tag_class' do
-            subject { hp.new(enc).next.asn1_object.tag.tag_class }
 
             it "has UNIVERSAL tag class" do
-              expect(subject.tag_class).to eq(:UNIVERSAL)
-            end
-            it "has UNIVERSAL mask" do
-              expect(subject.mask).to eq(tag_class::UNIVERSAL)
+              expect(subject.tag_class).to eq(tag_class::UNIVERSAL)
             end
           end
 
           context 'length' do
-            subject { hp.new(enc).next.asn1_object.length }
+            subject { parser.new(enc).next_header.length }
 
             it "has length 256" do
               expect(subject.length).to eq(256)
@@ -106,9 +92,51 @@ RSpec.describe Krypt::Asn1::Der::HeaderParser do
           end
 
           context 'value' do
-            subject { hp.new(enc).next.asn1_object.value }
+            subject { parser.new(enc).next_header.value }
 
             it { is_expected.to eq("\xFF" * 256) }
+          end
+        end
+
+        context ':UNIVERSAL OCTET STRING complex length 2 bytes (1980)' do
+          let(:enc) { "\x04\x82\x07\xBC" << ("\xFF" * 1980) }
+
+          context 'tag' do
+            subject { parser.new(enc).next_header.tag }
+
+            it "has an OCTET_STRING tag" do
+              expect(subject.tag).to eq(Krypt::Asn1::OCTET_STRING)
+            end
+            it "is primitive" do
+              expect(subject.constructed?).to eq(false)
+            end
+            it 'encodes to \x04' do
+              expect(subject.encoding).to eq("\x04")
+            end
+
+            it "has UNIVERSAL tag class" do
+              expect(subject.tag_class).to eq(tag_class::UNIVERSAL)
+            end
+          end
+
+          context 'length' do
+            subject { parser.new(enc).next_header.length }
+
+            it "has length 1980" do
+              expect(subject.length).to eq(1980)
+            end
+            it "is definite" do
+              expect(subject.indefinite?).to eq(false)
+            end
+            it 'encodes to \x82\x07\xBC' do
+              expect(subject.encoding).to eq("\x82\x07\xBC")
+            end
+          end
+
+          context 'value' do
+            subject { parser.new(enc).next_header.value }
+
+            it { is_expected.to eq("\xFF" * 1980) }
           end
         end
 
@@ -116,7 +144,7 @@ RSpec.describe Krypt::Asn1::Der::HeaderParser do
           let(:enc) { "\xDF\x81\x16\x01\x01" }
 
           context 'tag' do
-            subject { hp.new(enc).next.asn1_object.tag }
+            subject { parser.new(enc).next_header.tag }
 
             it "has a tag of 150" do
               expect(subject.tag).to eq(150)
@@ -127,21 +155,14 @@ RSpec.describe Krypt::Asn1::Der::HeaderParser do
             it 'encodes to \xDF\x81\x16' do
               expect(subject.encoding).to eq("\xDF\x81\x16")
             end
-          end
-
-          context 'tag_class' do
-            subject { hp.new(enc).next.asn1_object.tag.tag_class }
 
             it "has PRIVATE tag class" do
-              expect(subject.tag_class).to eq(:PRIVATE)
-            end
-            it "has PRIVATE mask" do
-              expect(subject.mask).to eq(tag_class::PRIVATE)
+              expect(subject.tag_class).to eq(tag_class::PRIVATE)
             end
           end
 
           context 'length' do
-            subject { hp.new(enc).next.asn1_object.length }
+            subject { parser.new(enc).next_header.length }
 
             it "has length 1" do
               expect(subject.length).to eq(1)
@@ -155,7 +176,7 @@ RSpec.describe Krypt::Asn1::Der::HeaderParser do
           end
 
           context 'value' do
-            subject { hp.new(enc).next.asn1_object.value }
+            subject { parser.new(enc).next_header.value }
 
             it { is_expected.to eq("\x01") }
           end
@@ -165,7 +186,7 @@ RSpec.describe Krypt::Asn1::Der::HeaderParser do
           let(:enc) { "\x80\x01\x01" }
 
           context 'tag' do
-            subject { hp.new(enc).next.asn1_object.tag }
+            subject { parser.new(enc).next_header.tag }
 
             it "has a tag of 0" do
               expect(subject.tag).to eq(0)
@@ -176,16 +197,9 @@ RSpec.describe Krypt::Asn1::Der::HeaderParser do
             it 'encodes to \x80' do
               expect(subject.encoding).to eq("\x80")
             end
-          end
-
-          context 'tag_class' do
-            subject { hp.new(enc).next.asn1_object.tag.tag_class }
 
             it "has CONTEXT_SPECIFIC tag class" do
-              expect(subject.tag_class).to eq(:CONTEXT_SPECIFIC)
-            end
-            it "has CONTEXT_SPECIFIC mask" do
-              expect(subject.mask).to eq(tag_class::CONTEXT_SPECIFIC)
+              expect(subject.tag_class).to eq(tag_class::CONTEXT_SPECIFIC)
             end
           end
         end
@@ -194,7 +208,7 @@ RSpec.describe Krypt::Asn1::Der::HeaderParser do
           let(:enc) { "\xA0\x03\x02\x01\x00" }
 
           context 'tag' do
-            subject { hp.new(enc).next.asn1_object.tag }
+            subject { parser.new(enc).next_header.tag }
 
             it "has a tag of 0" do
               expect(subject.tag).to eq(0)
@@ -205,16 +219,9 @@ RSpec.describe Krypt::Asn1::Der::HeaderParser do
             it 'encodes to \xA0' do
               expect(subject.encoding).to eq("\xA0")
             end
-          end
-
-          context 'tag_class' do
-            subject { hp.new(enc).next.asn1_object.tag.tag_class }
 
             it "has CONTEXT_SPECIFIC tag class" do
-              expect(subject.tag_class).to eq(:CONTEXT_SPECIFIC)
-            end
-            it "has CONTEXT_SPECIFIC mask" do
-              expect(subject.mask).to eq(tag_class::CONTEXT_SPECIFIC)
+              expect(subject.tag_class).to eq(tag_class::CONTEXT_SPECIFIC)
             end
           end
         end
@@ -223,7 +230,7 @@ RSpec.describe Krypt::Asn1::Der::HeaderParser do
           let(:enc) { "\x40\x01\x00" }
 
           context 'tag' do
-            subject { hp.new(enc).next.asn1_object.tag }
+            subject { parser.new(enc).next_header.tag }
 
             it "has a tag of 0" do
               expect(subject.tag).to eq(0)
@@ -234,16 +241,9 @@ RSpec.describe Krypt::Asn1::Der::HeaderParser do
             it 'encodes to \x40' do
               expect(subject.encoding).to eq("\x40")
             end
-          end
-
-          context 'tag_class' do
-            subject { hp.new(enc).next.asn1_object.tag.tag_class }
 
             it "has APPLICATION tag class" do
-              expect(subject.tag_class).to eq(:APPLICATION)
-            end
-            it "has APPLICATION mask" do
-              expect(subject.mask).to eq(tag_class::APPLICATION)
+              expect(subject.tag_class).to eq(tag_class::APPLICATION)
             end
           end
         end
@@ -252,7 +252,7 @@ RSpec.describe Krypt::Asn1::Der::HeaderParser do
           let(:enc) { "\xC0\x01\x00" }
 
           context 'tag' do
-            subject { hp.new(enc).next.asn1_object.tag }
+            subject { parser.new(enc).next_header.tag }
 
             it "has a tag of 0" do
               expect(subject.tag).to eq(0)
@@ -263,16 +263,9 @@ RSpec.describe Krypt::Asn1::Der::HeaderParser do
             it 'encodes to \xC0' do
               expect(subject.encoding).to eq("\xC0")
             end
-          end
-
-          context 'tag_class' do
-            subject { hp.new(enc).next.asn1_object.tag.tag_class }
 
             it "has PRIVATE tag class" do
-              expect(subject.tag_class).to eq(:PRIVATE)
-            end
-            it "has PRIVATE mask" do
-              expect(subject.mask).to eq(tag_class::PRIVATE)
+              expect(subject.tag_class).to eq(tag_class::PRIVATE)
             end
           end
         end
@@ -290,7 +283,7 @@ RSpec.describe Krypt::Asn1::Der::HeaderParser do
         let(:enc) { "\x24\x80\x04\x01\x01\x04\x01\x02\x00\x00" }
 
         context 'tag' do
-          subject { hp.new(enc).next.asn1_object.tag }
+          subject { parser.new(enc).next_header.tag }
 
           it "has OCTET_STRING tag" do
             expect(subject.tag).to eq(Krypt::Asn1::OCTET_STRING)
@@ -301,21 +294,14 @@ RSpec.describe Krypt::Asn1::Der::HeaderParser do
           it 'encodes to \x24' do
             expect(subject.encoding).to eq("\x24")
           end
-        end
-
-        context 'tag_class' do
-          subject { hp.new(enc).next.asn1_object.tag.tag_class }
 
           it "has UNIVERSAL tag class" do
-            expect(subject.tag_class).to eq(:UNIVERSAL)
-          end
-          it "has UNIVERSAL mask" do
-            expect(subject.mask).to eq(tag_class::UNIVERSAL)
+            expect(subject.tag_class).to eq(tag_class::UNIVERSAL)
           end
         end
 
         context 'length' do
-          subject { hp.new(enc).next.asn1_object.length }
+          subject { parser.new(enc).next_header.length }
 
           it "has length of nil" do
             expect(subject.length).to be_nil
@@ -329,7 +315,7 @@ RSpec.describe Krypt::Asn1::Der::HeaderParser do
         end
 
         context 'value' do
-          subject { hp.new(enc).next.asn1_object.value }
+          subject { parser.new(enc).next_header.value }
 
           it { is_expected.to eq("\x04\x01\x01\x04\x01\x02\x00\x00") }
         end
@@ -345,7 +331,7 @@ RSpec.describe Krypt::Asn1::Der::HeaderParser do
       let(:enc) { StringIO.new("\x01\x01\xFF") }
 
       context 'tag' do
-        subject { hp.new(enc).next.asn1_object.tag }
+        subject { parser.new(enc).next_header.tag }
 
         it "has BOOLEAN tag" do
           expect(subject.tag).to eq(Krypt::Asn1::BOOLEAN)
@@ -356,21 +342,14 @@ RSpec.describe Krypt::Asn1::Der::HeaderParser do
         it 'encodes to \x01' do
           expect(subject.encoding).to eq("\x01")
         end
-      end
-
-      context 'tag_class' do
-        subject { hp.new(enc).next.asn1_object.tag.tag_class }
 
         it "has UNIVERSAL tag class" do
-          expect(subject.tag_class).to eq(:UNIVERSAL)
-        end
-        it "has UNIVERSAL mask" do
-          expect(subject.mask).to eq(tag_class::UNIVERSAL)
+          expect(subject.tag_class).to eq(tag_class::UNIVERSAL)
         end
       end
 
       context 'length' do
-        subject { hp.new(enc).next.asn1_object.length }
+        subject { parser.new(enc).next_header.length }
 
         it "has length 1" do
           expect(subject.length).to eq(1)
@@ -384,7 +363,7 @@ RSpec.describe Krypt::Asn1::Der::HeaderParser do
       end
 
       context 'value' do
-        subject { hp.new(enc).next.asn1_object.value }
+        subject { parser.new(enc).next_header.value }
 
         it { is_expected.to eq("\xFF") }
       end
@@ -393,19 +372,19 @@ RSpec.describe Krypt::Asn1::Der::HeaderParser do
   end
 
   it 'raises for an invalid complex tag with bits 7 to 1 equal to zero' do
-    expect { hp.new("\xDF\x80\x16\x01\x01").next }.to raise_error
+    expect { parser.new("\xDF\x80\x16\x01\x01").next_header }.to raise_error
   end
 
   it 'raises for an initial complex length octet 0xFF' do
-    expect { hp.new("\x04\xFF").next }.to raise_error
+    expect { parser.new("\x04\xFF").next_header }.to raise_error
   end
 
-  it 'raises for an unknown tag class' do
-    expect { tag_class.of_mask(42) }.to raise_error
+  pending 'raises for an unknown tag class' do
+    fail
   end
 
   context 'allows to read the header value in a streaming manner with a buffer' do
-    subject { hp.new(der).next.value_io.read(nil, buf) }
+    subject { parser.new(der).next_header.value_io.read(nil, buf) }
 
     context 'definite length' do
       let(:der) { "\x01\x01\xFF" }
@@ -424,7 +403,7 @@ RSpec.describe Krypt::Asn1::Der::HeaderParser do
     end
 
     context 'byte by byte' do
-      subject { hp.new(der).next.value_io.read(1) }
+      subject { parser.new(der).next_header.value_io.read(1) }
 
       context 'definite length' do
         let(:der) { "\x02\x02\xFF\x00" }

@@ -1,78 +1,96 @@
-# encoding: BINARY
+require_relative 'parser/bit_string'
+require_relative 'parser/boolean'
+require_relative 'parser/default_parser'
+require_relative 'parser/end_of_contents'
+require_relative 'parser/generalized_time'
+require_relative 'parser/integer_parser'
+require_relative 'parser/lazy_parsable_constructed'
+require_relative 'parser/lazy_parsable_primitive'
+require_relative 'parser/null'
+require_relative 'parser/object_id'
+require_relative 'parser/utc_time'
+require_relative 'parser/utf8_string'
 
-module Krypt::Asn1
-  class Parser
+module Krypt
+  module Asn1
+    module Parser
 
-    def parse(io_or_string)
-      header = Der::HeaderParser.new(io_or_string).next
-      return nil unless header
-      interpret(header.asn1_object)
-    end
+      PARSERS = [
+        EndOfContents,
+        Boolean,
+        IntegerParser, # INTEGER
+        BitString,
+        DefaultParser, # OCTET STRING
+        Null,
+        ObjectId,
+        DefaultParser, # OBJECT_DESCRIPTOR
+        DefaultParser, # EXTERNAL
+        DefaultParser, # REAL
+        IntegerParser, # ENUMERATED
+        DefaultParser, # EMBEDDED_PDV
+        Utf8String,
+        DefaultParser, # RELATIVE_OID
+        DefaultParser, # UNIVERSAL 14
+        DefaultParser, # UNIVERSAL 15
+        Sequence,
+        Set,
+        DefaultParser, # NUMERIC STRING
+        DefaultParser, # PRINTABLE STRING
+        DefaultParser, # T61 STRING
+        DefaultParser, # VIDEOTEX STRING
+        DefaultParser, # IA5 STRING
+        UtcTime,
+        GeneralizedTime,
+        DefaultParser, # GRAPHIC STRING
+        DefaultParser, # ISO64 STRING
+        DefaultParser, # GENERAL STRING
+        DefaultParser, # UNIVERSAL STRING
+        DefaultParser, # CHARACTER STRING
+        DefaultParser # BMP STRING
+      ]
 
-    private
+      private_constant :PARSERS
 
-    UNIVERSAL_CLASSES = [
-      EndOfContents,
-      Boolean,
-      Integer,
-      BitString,
-      OctetString,
-      Null,
-      ObjectId,
-      nil, # OBJECT_DESCRIPTOR
-      nil, # EXTERNAL
-      nil, # REAL
-      Enumerated,
-      nil, # EMBEDDED_PDV
-      Utf8String,
-      nil, # RELATIVE_OID
-      nil, # UNIVERSAL 14
-      nil, # UNIVERSAL 15
-      Sequence,
-      Set,
-      NumericString,
-      PrintableString,
-      T61String,
-      VideotexString,
-      Ia5String,
-      UtcTime,
-      GeneralizedTime,
-      GraphicString,
-      Iso64String,
-      GeneralString,
-      UniversalString,
-      CharacterString,
-      BmpString
-    ]
-    private_constant :UNIVERSAL_CLASSES
+      module_function
 
+      def new_parsable_primitive(object, der)
+        Parser::LazyParsablePrimitive.new(object, der)
+      end
 
-    def interpret(der)
-      tag = der.tag
-      t = tag.tag
-      tc = tag.tag_class.tag_class
-      validate(t, tc)
+      def new_parsable_constructed(object, der)
+        Parser::LazyParsableConstructed.new(der)
+      end
 
-      fallback = tag.constructed? ? Constructed : Primitive
-      interpret_with_fallback(t, tc, der, fallback)
-    end
+      def parse(io_or_string)
+        header = Der::Parser.new(io_or_string).next_header
+        return nil unless header
+        interpret(Der.new(header.tag, header.length, header.value))
+      end
 
-    def interpret_with_fallback(tag, tc, der, fallback)
-      if tc == :UNIVERSAL
-        c = UNIVERSAL_CLASSES[tag]
-        return c.from_der(der) if c
-        fallback.from_der(der)
-      else
+      def parse_value(object, bytes)
+        default_tag = object.default_tag
+        parser = default_tag ? PARSERS[default_tag] : DefaultParser
+        parser.parse_value(bytes)
+      end
+
+      private; module_function
+
+      def interpret(der)
+        tag = der.tag
+        t = tag.tag
+        tc = tag.tag_class
+
+        if tc == Der::TagClass::UNIVERSAL
+          raise "Invalid tag for UNIVERSAL class: #{tag}" if t > 30
+          c = Asn1::UNIVERSAL_CLASSES[t]
+          return c.from_der(der) if c
+        end
+
+        fallback = tag.constructed? ? Constructed : Primitive
         fallback.from_der(der)
       end
-    end
 
-    def validate(tag, tc)
-      if tag > 30 && tc == :UNIVERSAL
-        raise "Invalid tag for UNIVERSAL class: #{tag}"
-      end
     end
-
   end
 end
 

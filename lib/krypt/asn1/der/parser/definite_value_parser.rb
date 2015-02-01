@@ -1,5 +1,5 @@
 module Krypt::Asn1
-  class Der::DefiniteReader
+  class Der::DefiniteValueParser
 
     def initialize(io, length)
       @io = io

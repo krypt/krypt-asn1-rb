@@ -2,7 +2,6 @@
 
 module Krypt::Asn1
   class Der
-    include IOEncodable
 
     attr_reader :tag, :length, :value
 
@@ -16,10 +15,23 @@ module Krypt::Asn1
       end
     end
 
+    def to_der
+      Der::Encoder.to_der(self)
+    end
+
     def encode_to(io)
-      @tag.encode_to(io)
-      @length.encode_to(io)
-      io << @value
+      Der::Encoder.encode_to(io, self)
+    end
+
+    class << self
+
+      def decode(io_or_string)
+        header = Der::Parser.new(io_or_string).next_header
+        raise "Already at EOF" unless header
+        Der.new(header.tag, header.length, header.value)
+      end
+      alias_method :parse, :decode
+
     end
 
     private
