@@ -15,8 +15,7 @@ module Krypt::Asn1
 
         def matches?(value)
           tag = value.tag
-          matching_tag?(tag) &&
-            matching_tag_class?(tag)
+          tag.tag == expected_tag && tag.tag_class == expected_tag_class
         end
 
         def assign_default(instance)
@@ -36,14 +35,6 @@ module Krypt::Asn1
 
         def expected_tag_class
           custom_tag_class || Der::TagClass::UNIVERSAL
-        end
-
-        def matching_tag?(tag)
-          tag.tag == expected_tag
-        end
-
-        def matching_tag_class?(tag)
-          tag.tag_class == expected_tag_class
         end
 
       end

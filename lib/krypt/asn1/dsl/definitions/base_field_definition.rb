@@ -4,51 +4,38 @@ module Krypt::Asn1
       class BaseFieldDefinition
 
         attr_reader *%i{
-          options
           parser
           encoder
         }
 
         def initialize(options)
-          @options = options[:options] || {}
           @parser = options.fetch(:parser)
           @encoder = options.fetch(:encoder)
-        end
-
-        def has_default?
-          options.has_key?(:default)
-        end
-
-        def default_value
-          options[:default]
+          @options = options[:options] || {}
         end
 
         def optional?
-          options[:optional]
+          @options[:optional]
         end
 
         def mandatory?
           !optional?
         end
 
-        def custom_tag?
-          !!options[:tag]
+        def default_value?
+          @options.has_key?(:default)
+        end
+
+        def default_value
+          @options[:default]
         end
 
         def custom_tag
-          options[:tag]
-        end
-
-        def custom_tag_class?
-          options[:tagging] || options[:tag_class]
+          @options[:tag]
         end
 
         def custom_tag_class
-          if options[:tagging]
-            Der::TagClass::CONTEXT_SPECIFIC
-          else
-            options[:tag_class]
-          end
+          @tagginng ? Der::TagClass::CONTEXT_SPECIFIC : @custom_tag_class
         end
 
       end

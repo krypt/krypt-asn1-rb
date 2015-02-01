@@ -48,7 +48,7 @@ module Krypt::Asn1
         end
 
         def fallback_assign(field, instance)
-          if field.has_default?
+          if field.default_value?
             field.assign_default(instance)
           else
             raise "Mandatory field #{field.name} not found" if field.mandatory?
