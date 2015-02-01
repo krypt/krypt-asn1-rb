@@ -23,6 +23,12 @@ module Krypt::Asn1
       Der::Encoder.encode_to(io, self)
     end
 
+    def self.decode(io_or_string)
+      header = Der::Parser.new(io_or_string).next_header
+      raise "Already at EOF" unless header
+      Der.new(header.tag, header.length, header.value)
+    end
+
     private
 
     def init_options(options)

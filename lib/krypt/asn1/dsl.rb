@@ -13,36 +13,22 @@ module Krypt::Asn1
       def init_cons_definition(base, codec)
         base.instance_variable_set(
           :@definition,
-          codec: codec,
-          layout: [],
-          min_size: 0
+          Definitions::Object.new(codec: codec)
         )
 
         [
           Accessors::Default,
-          Definitions::Constructed,
+          Definitions::ConstructedClassMethods,
           Parser,
           Encoder
         ].each { |mod| base.extend(mod) }
       end
 
-      def add_to_definition(klass, new_def)
+      def add_to_definition(klass, field_definition)
         definition = klass.instance_variable_get(:@definition)
-        definition[:layout] << new_def
-        codec = definition[:codec]
-        if codec == Codecs::Sequence || codec == Codecs::Set
-          increase_min_size(definition, new_def[:options])
-        end
-        nil
+        definition.add(field_definition)
       end
 
-      private; module_function
-
-      def increase_min_size(definition, options)
-        options ||= {}
-        need_increase = !(definition[:optional] || definition[:default])
-        definition[:min_size] += 1 if need_increase
-      end
     end
 
     module Sequence
@@ -61,13 +47,12 @@ module Krypt::Asn1
       def self.included(base)
         base.instance_variable_set(
           :@definition,
-          codec: Codecs::Choice,
-          layout: []
+          Definitions::ObjectChoice.new
         )
 
         [
           Accessors::Choice,
-          Definitions::Choice,
+          Definitions::ChoiceClassMethods,
           Parser,
           Encoder
         ].each { |mod| base.extend(mod) }

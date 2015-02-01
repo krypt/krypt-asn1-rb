@@ -1,7 +1,7 @@
 module Krypt::Asn1
   module DSL
     module Definitions
-      class Constructed < BaseConstructedDefinition
+      class ConstructedChoice < BaseChoiceDefinition
 
         attr_reader :type
 

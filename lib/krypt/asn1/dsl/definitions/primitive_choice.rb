@@ -1,12 +1,12 @@
 module Krypt::Asn1
   module DSL
     module Definitions
-      class Constructed < BaseConstructedDefinition
+      class PrimitiveChoice < BaseChoiceDefinition
 
         attr_reader :type
 
         def initialize(options)
-          super
+          super(options.merge(codec: Codecs::Primitive))
           @type = options.fetch(:type)
         end
 
