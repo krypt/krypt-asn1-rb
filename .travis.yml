@@ -6,6 +6,10 @@ rvm:
   - 2.0
   - jruby-head
   - rbx-2
+jdk:
+  - openjdk7
+  - oraclejdk8
+  - oraclejdk7
 gemfile:
   - Gemfile
 notifications:
@@ -14,9 +18,20 @@ notifications:
       - Martin.Bosslet@gmail.com
     on_success: always
     on_failure: always
-branches:
-  only:
-    - master
 matrix:
   allow_failures:
     - rvm: ruby-head
+  exclude:
+    - jdk: openjdk7
+      rvm: ruby-head
+      rvm: 2.2
+      rvm: 2.1
+      rvm: 2.0
+      rvm: rbx-2
+    - jdk: oraclejdk7
+      rvm: ruby-head
+      rvm: 2.2
+      rvm: 2.1
+      rvm: 2.0
+      rvm: rbx-2
+
