@@ -22,16 +22,23 @@ matrix:
   allow_failures:
     - rvm: ruby-head
   exclude:
-    - jdk: openjdk7
-      rvm: ruby-head
-      rvm: 2.2
-      rvm: 2.1
-      rvm: 2.0
-      rvm: rbx-2
-    - jdk: oraclejdk7
-      rvm: ruby-head
-      rvm: 2.2
-      rvm: 2.1
-      rvm: 2.0
-      rvm: rbx-2
-
+    - rvm: ruby-head
+      jdk: openjdk7
+    - rvm: ruby-head
+      jdk: oraclejdk7
+    - rvm: 2.2
+      jdk: openjdk7
+    - rvm: 2.2
+      jdk: oraclejdk7
+    - rvm: 2.1
+      jdk: openjdk7
+    - rvm: 2.1
+      jdk: oraclejdk7
+    - rvm: 2.0
+      jdk: openjdk7
+    - rvm: 2.0
+      jdk: oraclejdk7
+    - rvm: rbx-2
+      jdk: openjdk7
+    - rvm: rbx-2
+      jdk: oraclejdk7
