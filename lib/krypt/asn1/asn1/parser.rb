@@ -49,42 +49,7 @@ module Krypt
         DefaultParser # BMP STRING
       ]
 
-      UNIVERSAL_CLASSES = [
-        Asn1::EndOfContents,
-        Asn1::Boolean,
-        Asn1::Integer,
-        Asn1::BitString,
-        Asn1::OctetString,
-        Asn1::Null,
-        Asn1::ObjectId,
-        nil, # OBJECT_DESCRIPTOR
-        nil, # EXTERNAL
-        nil, # REAL
-        Asn1::Enumerated,
-        nil, # EMBEDDED_PDV
-        Asn1::Utf8String,
-        nil, # RELATIVE_OID
-        nil, # UNIVERSAL 14
-        nil, # UNIVERSAL 15
-        Asn1::Sequence,
-        Asn1::Set,
-        Asn1::NumericString,
-        Asn1::PrintableString,
-        Asn1::T61String,
-        Asn1::VideotexString,
-        Asn1::Ia5String,
-        Asn1::UtcTime,
-        Asn1::GeneralizedTime,
-        Asn1::GraphicString,
-        Asn1::Iso64String,
-        Asn1::GeneralString,
-        Asn1::UniversalString,
-        Asn1::CharacterString,
-        Asn1::BmpString
-      ]
-
       private_constant :PARSERS
-      private_constant :UNIVERSAL_CLASSES
 
       module_function
 
@@ -117,7 +82,7 @@ module Krypt
 
         if tc == Der::TagClass::UNIVERSAL
           raise "Invalid tag for UNIVERSAL class: #{tag}" if t > 30
-          c = UNIVERSAL_CLASSES[t]
+          c = Asn1::UNIVERSAL_CLASSES[t]
           return c.from_der(der) if c
         end
 

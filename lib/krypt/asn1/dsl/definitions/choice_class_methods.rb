@@ -18,12 +18,13 @@ module Krypt::Asn1
             end
           end
 
-          define_method :declare_constructed do |method, codec|
+          define_method :declare_constructed do |method, parser, encoder|
             define_method method do |type, options=nil|
               DSL::Helper.add_to_definition(
                 self,
                 Definitions::ConstructedChoice.new(
-                  codec: codec,
+                  parser: parser,
+                  encoder: encoder,
                   type: type,
                   options: options
                 )

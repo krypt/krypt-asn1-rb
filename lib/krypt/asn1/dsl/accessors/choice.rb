@@ -8,10 +8,6 @@ module Krypt::Asn1
           define_method name do
             # TODO
           end
-
-          define_method "#{name}=" do |value|
-            # TODO
-          end
         end
 
       end

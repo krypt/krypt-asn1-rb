@@ -4,7 +4,10 @@ module Krypt::Asn1
       class AnyChoice < BaseChoiceDefinition
 
         def initialize(options)
-          super(options.merge(codec: Codecs::Any))
+          super(options.merge(
+            parser: nil,
+            encoder: nil
+          ))
         end
 
       end

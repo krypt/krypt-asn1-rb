@@ -1,3 +1,4 @@
+require_relative 'definitions/base_field_definition'
 require_relative 'definitions/base_choice_definition'
 require_relative 'definitions/base_constructed_definition'
 require_relative 'definitions/base_object_definition'

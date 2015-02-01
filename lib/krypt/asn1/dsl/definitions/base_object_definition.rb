@@ -1,18 +1,22 @@
 module Krypt::Asn1
   module DSL
     module Definitions
-      class BaseObjectDefinition
+      class BaseObjectDefinition < BaseFieldDefinition
 
-        attr_reader :codec
+        attr_reader :parser, :encoder
 
-        def initialize(codec)
-          @codec = codec
+        def initialize(options)
+          super
           @fields = []
         end
 
         def add(field_definition)
           @fields << field_definition
           self
+        end
+
+        def parse(asn1, instance)
+          parser.parse(asn1, instance, @fields)
         end
 
       end

@@ -6,7 +6,10 @@ module Krypt::Asn1
         attr_reader :type
 
         def initialize(options)
-          super(options.merge(codec: Codecs::Primitive))
+          super(options.merge(
+            parser: nil,
+            encoder: nil
+          ))
           @type = options.fetch(:type)
         end
 

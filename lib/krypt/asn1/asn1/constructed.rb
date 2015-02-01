@@ -13,6 +13,10 @@ module Krypt
         value.each(&block)
       end
 
+      def size
+        value.size
+      end
+
       def accept(visitor)
         visitor.pre_constructed(self)
         each { |v| v.accept(visitor) }

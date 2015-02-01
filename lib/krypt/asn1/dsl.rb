@@ -1,5 +1,4 @@
 require_relative 'dsl/accessors'
-require_relative 'dsl/codecs'
 require_relative 'dsl/definitions'
 require_relative 'dsl/encoder'
 require_relative 'dsl/parser'
@@ -10,14 +9,17 @@ module Krypt::Asn1
     module Helper
       module_function
 
-      def init_cons_definition(base, codec)
+      def init_cons_definition(base, encoder)
         base.instance_variable_set(
           :@definition,
-          Definitions::Object.new(codec: codec)
+          Definitions::Object.new(
+            parser: Parsers::Constructed,
+            encoder: encoder
+          )
         )
 
         [
-          Accessors::Default,
+          Accessors::Constructed,
           Definitions::ConstructedClassMethods,
           Parser,
           Encoder
@@ -33,13 +35,13 @@ module Krypt::Asn1
 
     module Sequence
       def self.included(base)
-        Helper.init_cons_definition(base, Codecs::Sequence)
+        Helper.init_cons_definition(base, nil)
       end
     end
 
     module Set
       def self.included(base)
-        Helper.init_cons_definition(base, Codecs::Set)
+        Helper.init_cons_definition(base, nil)
       end
     end
 
@@ -58,7 +60,7 @@ module Krypt::Asn1
         ].each { |mod| base.extend(mod) }
 
         [:value, :tag, :type].each do |field|
-          base.asn1_attr_accessor field
+          base.asn1_attr_reader field
         end
       end
     end

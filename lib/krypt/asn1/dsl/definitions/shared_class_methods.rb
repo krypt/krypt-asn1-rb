@@ -25,9 +25,9 @@ module Krypt::Asn1
           declare_primitive(:asn1_universal_string, Krypt::Asn1::UNIVERSAL_STRING)
           declare_primitive(:asn1_bmp_string, Krypt::Asn1::BMP_STRING)
 
-          declare_constructed(:asn1_object, Codecs::Object)
-          declare_constructed(:asn1_sequence_of, Codecs::SequenceOf)
-          declare_constructed(:asn1_set_of, Codecs::SetOf)
+          declare_constructed(:asn1_object, nil, nil)
+          declare_constructed(:asn1_sequence_of, nil, nil)
+          declare_constructed(:asn1_set_of, nil, nil)
 
           declare_any
         end

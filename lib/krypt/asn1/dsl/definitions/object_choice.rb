@@ -3,8 +3,11 @@ module Krypt::Asn1
     module Definitions
       class ObjectChoice < BaseObjectDefinition
 
-        def initialize
-          super(Codecs::Choice)
+        def initialize(options={})
+          super(options.merge(
+            parser: nil,
+            encoder: nil
+          ))
         end
 
       end

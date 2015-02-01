@@ -35,11 +35,47 @@ module Krypt::Asn1
 
   BMP_STRING       = 0x1e
 
-  module_function
+  UNIVERSAL_CLASSES = [
+    EndOfContents,
+    Boolean,
+    Integer,
+    BitString,
+    OctetString,
+    Null,
+    ObjectId,
+    nil, # OBJECT_DESCRIPTOR
+    nil, # EXTERNAL
+    nil, # REAL
+    Enumerated,
+    nil, # EMBEDDED_PDV
+    Utf8String,
+    nil, # RELATIVE_OID
+    nil, # UNIVERSAL 14
+    nil, # UNIVERSAL 15
+    Sequence,
+    Set,
+    NumericString,
+    PrintableString,
+    T61String,
+    VideotexString,
+    Ia5String,
+    UtcTime,
+    GeneralizedTime,
+    GraphicString,
+    Iso64String,
+    GeneralString,
+    UniversalString,
+    CharacterString,
+    BmpString
+  ]
 
-  def decode(io_or_string)
-    Parser.parse(io_or_string)
+  class << self
+
+    def decode(io_or_string)
+      Parser.parse(io_or_string)
+    end
+    alias_method :parse, :decode
+
   end
-  alias_method :parse, :decode
 
 end
