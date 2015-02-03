@@ -36,39 +36,25 @@ module Krypt::Asn1
           end
 
           def declare_object(base)
-            base.instance_eval do
-              def self.asn1_object (name, type, options=nil)
-                DSL::Helper.add_constructed_definition(
-                  self,
-                  Definitions::Object,
-                  type: type,
-                  name: name,
-                  options: options
-                )
-              end
-            end
+            declare_constructed(base, :asn1_object, Definitions::Object)
           end
 
           def declare_sequence_of(base)
-            base.instance_eval do
-              def self.asn1_sequence_of(name, type, options=nil)
-                DSL::Helper.add_constructed_definition(
-                  self,
-                  Definitions::SequenceOf,
-                  type: type,
-                  name: name,
-                  options: options
-                )
-              end
-            end
+            declare_constructed(base, :asn1_sequence_of, Definitions::SequenceOf)
           end
 
           def declare_set_of(base)
+            declare_constructed(base, :asn1_set_of, Definitions::SetOf)
+          end
+
+          private; module_function
+
+          def declare_constructed(base, method, definition_class)
             base.instance_eval do
-              def self.asn1_set_of (name, type, options=nil)
+              define_singleton_method method do |name, type, options=nil|
                 DSL::Helper.add_constructed_definition(
                   self,
-                  Definitions::SetOf,
+                  definition_class,
                   type: type,
                   name: name,
                   options: options
