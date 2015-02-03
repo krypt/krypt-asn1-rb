@@ -23,7 +23,7 @@ module Krypt::Asn1
           pad = rest_not_zero?(bytes)
         end
 
-        twos_complement!(bytes)
+        Helpers::Integer.twos_complement!(bytes)
         bytes.prepend("\xff") if pad
         bytes
       end
@@ -48,22 +48,6 @@ module Krypt::Asn1
       def rest_not_zero?(bytes)
         return false if bytes.size == 1
         bytes[1..-1].each_byte.any? { |b| b > 0 }
-      end
-
-      def twos_complement!(bytes)
-        i = bytes.size - 1 # start at the end
-
-        while (b = bytes[i]) == "\x00" # 0x00 bytes stay 0x00 (due to carry)
-          i -= 1
-        end
-
-        bytes.setbyte(i, (b.ord ^ 0xff) + 1) # last non-zero byte is negated and incremented
-        i -= 1
-
-        while i >= 0
-          bytes.setbyte(i, (bytes[i].ord ^ 0xff)) # remaining leading bytes are just negated
-          i -= 1
-        end
       end
 
     end

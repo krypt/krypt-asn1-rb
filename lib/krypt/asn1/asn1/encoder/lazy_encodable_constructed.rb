@@ -33,7 +33,7 @@ module Krypt::Asn1
 
       def encode_values_to(io, indefinite)
         @parsed_value.each { |v| v.encode_to(io) }
-        add_eoc(@parsed_value, io) if indefinite
+        Helpers::EndOfContents.add_eoc(@parsed_value, io) if indefinite
       end
 
       private
@@ -61,18 +61,6 @@ module Krypt::Asn1
         io << @tag.encoding
         io << @length.encoding
         io << value
-      end
-
-      def add_eoc(values, io)
-        last = values.last
-        # just add if it was not present in the values
-        needs_eoc = last.nil? ||
-                    !(
-                      last.tag == END_OF_CONTENTS &&
-                      last.tag_class == Der::TagClass::UNIVERSAL
-                    )
-
-        EndOfContents.new.encode_to(io) if needs_eoc
       end
 
     end

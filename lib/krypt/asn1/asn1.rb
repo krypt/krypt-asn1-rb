@@ -1,3 +1,4 @@
+require_relative 'asn1/helpers'
 require_relative 'asn1/display_visitor'
 require_relative 'asn1/asn1_base'
 require_relative 'asn1/primitive'
