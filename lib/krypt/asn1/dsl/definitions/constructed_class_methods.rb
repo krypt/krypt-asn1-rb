@@ -8,48 +8,12 @@ module Krypt::Asn1
         class << self
           define_method :declare_primitive do |method, type|
             define_method method do |name, options=nil|
-              DSL::Helper.add_constructed_definition(
+              DSL::Helper.define_constructed_method(
                 self,
                 Definitions::Primitive,
-                type: type,
-                name: name,
-                options: options
-              )
-            end
-          end
-
-          define_method :declare_object do
-            define_method :asn1_object do |name, type, options=nil|
-              DSL::Helper.add_constructed_definition(
-                self,
-                Definitions::Object,
-                type: type,
-                name: name,
-                options: options
-              )
-            end
-          end
-
-          define_method :declare_sequence_of do
-            define_method :asn1_sequence_of do |name, type, options=nil|
-              DSL::Helper.add_constructed_definition(
-                self,
-                Definitions::SequenceOf,
-                type: type,
-                name: name,
-                options: options
-              )
-            end
-          end
-
-          define_method :declare_set_of do
-            define_method :asn1_set_of do |name, type, options=nil|
-              DSL::Helper.add_constructed_definition(
-                self,
-                Definitions::SetOf,
-                type: type,
-                name: name,
-                options: options
+                type,
+                name,
+                options
               )
             end
           end
@@ -61,6 +25,42 @@ module Krypt::Asn1
                 Definitions::Any,
                 name: name,
                 options: options
+              )
+            end
+          end
+
+          define_method :declare_object do
+            define_method :asn1_object do |name, type, options=nil|
+              DSL::Helper.define_constructed_method(
+                self,
+                Definitions::Object,
+                type,
+                name,
+                options
+              )
+            end
+          end
+
+          define_method :declare_sequence_of do
+            define_method :asn1_sequence_of do |name, type, options=nil|
+              DSL::Helper.define_constructed_method(
+                self,
+                Definitions::SequenceOf,
+                type,
+                name,
+                options
+              )
+            end
+          end
+
+          define_method :declare_set_of do
+            define_method :asn1_set_of do |name, type, options=nil|
+              DSL::Helper.define_constructed_method(
+                self,
+                Definitions::SetOf,
+                type,
+                name,
+                options
               )
             end
           end
