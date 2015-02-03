@@ -27,9 +27,8 @@ module Krypt
 
         def from_der(der)
           obj = allocate
-          obj.instance_eval do
-            @asn1 = Asn1::Parser.new_parsable_constructed(obj, der)
-          end
+          asn1 = Asn1::Parser.new_parsable_constructed(obj, der)
+          obj.instance_variable_set(:@asn1, asn1)
           obj
         end
 

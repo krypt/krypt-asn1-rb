@@ -5,14 +5,15 @@ module Krypt::Asn1
 
         attr_reader *%i{
           name
+          type
           iv_name
-          options
         }
 
         def initialize(options)
           super
 
           @name = options.fetch(:name)
+          @type = options.fetch(:type)
           @iv_name = "@#{name}".to_sym
         end
 
@@ -20,11 +21,10 @@ module Krypt::Asn1
           parser.parse(asn1, instance, self)
         end
 
-        def assign_default(instance)
-          instance.instance_variable_set(
-            iv_name,
-            default_value
-          )
+        protected
+
+        def expected_tag_class
+          custom_tag_class || Der::TagClass::UNIVERSAL
         end
 
       end

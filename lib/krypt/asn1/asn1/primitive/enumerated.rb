@@ -1,7 +1,7 @@
 module Krypt::Asn1
   class Enumerated < Primitive
 
-    def default_tag
+    def self.default_tag
       ENUMERATED
     end
 

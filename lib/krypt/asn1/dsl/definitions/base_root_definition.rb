@@ -1,9 +1,9 @@
 module Krypt::Asn1
   module DSL
     module Definitions
-      class BaseObjectDefinition < BaseFieldDefinition
+      class BaseRootDefinition < BaseFieldDefinition
 
-        attr_reader :parser, :encoder
+        attr_reader :fields
 
         def initialize(options)
           super
@@ -16,7 +16,7 @@ module Krypt::Asn1
         end
 
         def parse(asn1, instance)
-          parser.parse(asn1, instance, @fields)
+          parser.parse(asn1, instance, self)
         end
 
       end

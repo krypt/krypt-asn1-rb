@@ -1,7 +1,7 @@
 module Krypt::Asn1
   class Boolean < Primitive
 
-    def default_tag
+    def self.default_tag
       BOOLEAN
     end
 

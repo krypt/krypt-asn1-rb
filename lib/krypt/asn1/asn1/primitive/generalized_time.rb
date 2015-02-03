@@ -1,7 +1,7 @@
 module Krypt::Asn1
   class GeneralizedTime < Primitive
 
-    def default_tag
+    def self.default_tag
       GENERALIZED_TIME
     end
 

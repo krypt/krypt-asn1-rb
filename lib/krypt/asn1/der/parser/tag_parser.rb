@@ -7,7 +7,7 @@ module Krypt::Asn1
 
     def parse_tag(io)
       b = io.getbyte
-      if match(b, Der::Tag::COMPLEX_TAG_MASK)
+      if matches?(b, Der::Tag::COMPLEX_TAG_MASK)
         complex_tag(b, io)
       else
         primitive_tag(b)
@@ -16,7 +16,7 @@ module Krypt::Asn1
 
     private; module_function
 
-    def match(b, mask)
+    def matches?(b, mask)
       (b & mask) == mask
     end
 
@@ -43,7 +43,7 @@ module Krypt::Asn1
         buf << b
       end
 
-      while match(b, Der::Length::INDEFINITE_LENGTH_MASK)
+      while matches?(b, Der::Length::INDEFINITE_LENGTH_MASK)
         update.call
         b = io.readbyte
       end
@@ -55,7 +55,7 @@ module Krypt::Asn1
     def tc_and_cons(b)
       # TODO validate tag class
       tc = b & Der::TagClass::PRIVATE
-      cons = match(b, Der::Tag::CONSTRUCTED_MASK)
+      cons = matches?(b, Der::Tag::CONSTRUCTED_MASK)
       return tc, cons
     end
   end

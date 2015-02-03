@@ -1,12 +1,15 @@
 module Krypt::Asn1
   class EndOfContents < Primitive
 
-    def default_tag
+    def self.default_tag
       END_OF_CONTENTS
     end
 
-    def initialize
-      super(nil, tag: END_OF_CONTENTS, tag_class: Der::TagClass::UNIVERSAL)
+    def initialize(
+      value=nil,
+      options={ tag: END_OF_CONTENTS, tag_class: Der::TagClass::UNIVERSAL }
+    )
+      super(value, options)
     end
 
   end

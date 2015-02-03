@@ -1,7 +1,7 @@
 module Krypt::Asn1
   class UtcTime < Primitive
 
-    def default_tag
+    def self.default_tag
       UTC_TIME
     end
 

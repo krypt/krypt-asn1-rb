@@ -68,7 +68,7 @@ module Krypt
       end
 
       def parse_value(object, bytes)
-        default_tag = object.default_tag
+        default_tag = object.class.default_tag
         parser = default_tag ? PARSERS[default_tag] : DefaultParser
         parser.parse_value(bytes)
       end

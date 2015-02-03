@@ -57,7 +57,7 @@ module Krypt::Asn1
     end
 
     def new_encodable_constructed(object, values, options)
-      strategy = if Krypt::Asn1::SET == object.default_tag
+      strategy = if Krypt::Asn1::SET == object.class.default_tag
         Encoder::LazyEncodableSet
       else
         Encoder::LazyEncodableConstructed
@@ -66,7 +66,7 @@ module Krypt::Asn1
     end
 
     def encode_value(object, value)
-      default_tag = object.default_tag
+      default_tag = object.class.default_tag
       encoder = default_tag ? ENCODERS[default_tag] : DefaultEncoder
       encoder.encode_value(object, value)
     end

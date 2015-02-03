@@ -1,7 +1,7 @@
 module Krypt::Asn1
   class Ia5String < Primitive
 
-    def default_tag
+    def self.default_tag
       IA5_STRING
     end
 

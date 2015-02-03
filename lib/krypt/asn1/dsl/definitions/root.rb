@@ -1,7 +1,7 @@
 module Krypt::Asn1
   module DSL
     module Definitions
-      class BaseChoiceDefinition < BaseFieldDefinition
+      class Root < BaseRootDefinition
 
       end
     end

@@ -5,7 +5,7 @@ module Krypt::Asn1
       attr_reader :tag, :parsed_value
 
       def initialize(object, value, options)
-        tag = options[:tag] || object.default_tag
+        tag = options[:tag] || object.class.default_tag
         tag_class = options[:tag_class] || Der::TagClass::UNIVERSAL
         @tag = Der::Tag.new(tag: tag, tag_class: tag_class)
         @parsed_value = value

@@ -1,7 +1,7 @@
 module Krypt::Asn1
   class Utf8String < Primitive
 
-    def default_tag
+    def self.default_tag
       UTF8_STRING
     end
 

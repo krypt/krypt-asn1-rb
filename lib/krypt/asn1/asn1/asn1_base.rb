@@ -4,7 +4,7 @@ module Krypt::Asn1
   class Asn1Base
     include Comparable
 
-    def default_tag; nil; end
+    def self.default_tag; nil; end
 
     def tag
       @asn1.tag

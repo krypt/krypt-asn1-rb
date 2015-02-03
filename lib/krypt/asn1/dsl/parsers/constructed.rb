@@ -27,9 +27,9 @@ module Krypt::Asn1
 
         module_function
 
-        def parse(asn1, instance, fields)
+        def parse(asn1, instance, definition)
           value_matcher = ValueMatcher.new(asn1.value)
-          fields.each do |field|
+          definition.fields.each do |field|
             assign_value(value_matcher, field, instance)
           end
           value_matcher.assert_done!
@@ -40,7 +40,7 @@ module Krypt::Asn1
         def assign_value(value_matcher, field, instance)
           value = value_matcher.current_value
           if field.matches?(value)
-            field.parse(value, instance)
+            field.parse(unwrap_explicit(value, field), instance)
             value_matcher.matched!
           else
             fallback_assign(field, instance)
@@ -53,6 +53,12 @@ module Krypt::Asn1
           else
             raise "Mandatory field #{field.name} not found" if field.mandatory?
           end
+        end
+
+        # Unwrap explicitly tagged values - they are wrapped in a
+        # constructed container, leading to an Array of a single element
+        def unwrap_explicit(value, field)
+          field.tagging == :EXPLICIT ? value.first : value
         end
 
       end

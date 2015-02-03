@@ -2,14 +2,15 @@ module Krypt::Asn1
   module DSL
     module Parsers
 
-      module Primitive
+      module Object
 
         module_function
 
         def parse(value, instance, definition)
+          parsed = definition.type.from_asn1(value)
           instance.instance_variable_set(
             definition.iv_name,
-            value
+            Asn1Object.new(parsed)
           )
         end
 

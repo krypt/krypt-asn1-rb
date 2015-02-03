@@ -1,7 +1,7 @@
 module Krypt::Asn1
   class ObjectId < Primitive
 
-    def default_tag
+    def self.default_tag
       OBJECT_ID
     end
 

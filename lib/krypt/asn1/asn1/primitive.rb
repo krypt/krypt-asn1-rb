@@ -14,7 +14,8 @@ module Krypt
 
         def from_der(der)
           obj = allocate
-          obj.instance_eval { @asn1 = Asn1::Parser.new_parsable_primitive(obj, der) }
+          asn1 = Asn1::Parser.new_parsable_primitive(obj, der)
+          obj.instance_variable_set(:@asn1, asn1)
           obj
         end
 

@@ -35,7 +35,13 @@ module Krypt::Asn1
         end
 
         def custom_tag_class
-          @tagginng ? Der::TagClass::CONTEXT_SPECIFIC : @custom_tag_class
+          tagging ?
+            Der::TagClass::CONTEXT_SPECIFIC :
+            @options[:tag_class]
+        end
+
+        def tagging
+          @options[:tagging]
         end
 
       end

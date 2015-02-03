@@ -8,7 +8,7 @@ module Krypt::Asn1
 
     def initialize(options)
       @indefinite = !!options[:indefinite]
-      @length = options[:length] unless @indefinite
+      @length = options[:length]
       @encoding = options[:encoding]
     end
 

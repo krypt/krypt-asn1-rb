@@ -10,10 +10,10 @@ module Krypt::Asn1
     attr_reader :io
 
     def initialize(io_or_string)
-      if io_or_string.respond_to?(:read)
-        @io = io_or_string
+      if io_or_string.instance_of?(String)
+        @io = StringIO.new(io_or_string)
       else
-        init_string(io_or_string)
+        @io = io_or_string
       end
     end
 
@@ -23,13 +23,6 @@ module Krypt::Asn1
 
     def value_parser(header)
       Der::HeaderParser.value_parser(@io, header)
-    end
-
-    private
-
-    def init_string(s)
-      s = s.to_s.force_encoding(Encoding::BINARY)
-      @io = StringIO.new(s)
     end
 
   end
