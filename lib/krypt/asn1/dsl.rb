@@ -27,16 +27,6 @@ module Krypt::Asn1
         ].each { |mod| base.extend(mod) }
       end
 
-      def define_constructed_method(klass, definition_class, type, name, options)
-        add_constructed_definition(
-          klass,
-          definition_class,
-          type: type,
-          name: name,
-          options: options
-        )
-      end
-
       def add_constructed_definition(klass, definition_class, options)
         field_definition = definition_class.new(options)
         definition = klass.instance_variable_get(:@definition)
