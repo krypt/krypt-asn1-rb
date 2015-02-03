@@ -1,7 +1,7 @@
 module Krypt::Asn1
   module DSL
     module Definitions
-      class SequenceOf < BaseConstructedDefinition
+      class ConstructedOf < BaseConstructedDefinition
 
         def matches?(value)
           tag = value.tag
@@ -16,7 +16,7 @@ module Krypt::Asn1
         private
 
         def expected_tag
-          custom_tag || SEQUENCE
+          custom_tag || default_tag
         end
 
       end

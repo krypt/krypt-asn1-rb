@@ -4,6 +4,7 @@ require_relative 'definitions/base_root_definition'
 require_relative 'definitions/base_singular_definition'
 
 require_relative 'definitions/any'
+require_relative 'definitions/constructed_of'
 require_relative 'definitions/object'
 require_relative 'definitions/primitive'
 require_relative 'definitions/root'
