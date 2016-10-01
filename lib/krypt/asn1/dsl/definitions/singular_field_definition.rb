@@ -1,7 +1,7 @@
 module Krypt::Asn1
   module DSL
     module Definitions
-      class BaseSingularDefinition < BaseConstructedDefinition
+      class SingularFieldDefinition < NamedFieldDefinition
 
         def matches?(value)
           tag = value.tag
@@ -27,3 +27,4 @@ module Krypt::Asn1
     end
   end
 end
+

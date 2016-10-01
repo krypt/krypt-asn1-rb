@@ -1,7 +1,7 @@
 module Krypt::Asn1
   module DSL
     module Definitions
-      class BaseFieldDefinition
+      class FieldDefinition
 
         attr_reader *%i{
           parser

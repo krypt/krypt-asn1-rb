@@ -1,7 +1,7 @@
 module Krypt::Asn1
   module DSL
     module Definitions
-      class BaseConstructedDefinition < BaseFieldDefinition
+      class NamedFieldDefinition < FieldDefinition
 
         attr_reader *%i{
           name
@@ -13,7 +13,7 @@ module Krypt::Asn1
           super
 
           @name = options.fetch(:name)
-          @type = options.fetch(:type)
+          @type = options[:type] # ANY has no type
           @iv_name = "@#{name}".to_sym
         end
 

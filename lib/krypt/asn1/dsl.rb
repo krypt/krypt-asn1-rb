@@ -1,3 +1,4 @@
+require_relative 'dsl/helper'
 require_relative 'dsl/asn1_object'
 require_relative 'dsl/accessors'
 require_relative 'dsl/encoder'
@@ -7,38 +8,11 @@ require_relative 'dsl/definitions'
 module Krypt::Asn1
   module DSL
 
-    module Helper
-      module_function
-
-      def init_cons_definition(base, encoder)
-        base.instance_variable_set(
-          :@definition,
-          Definitions::Root.new(
-            parser: Parsers::Constructed,
-            encoder: encoder
-          )
-        )
-
-        [
-          Accessors::Constructed,
-          Definitions::ConstructedClassMethods,
-          Parser,
-          Encoder
-        ].each { |mod| base.extend(mod) }
-      end
-
-      def add_constructed_definition(klass, definition_class, options)
-        field_definition = definition_class.new(options)
-        definition = klass.instance_variable_get(:@definition)
-        definition.add(field_definition)
-        klass.asn1_attr_reader(field_definition.name, field_definition.iv_name)
-      end
-
-    end
-
     module Sequence
+      extend Helper
+
       def self.included(base)
-        Helper.init_cons_definition(base, nil)
+        create_constructed_definition(base, nil)
         base.extend(ClassMethods)
       end
 
@@ -50,8 +24,10 @@ module Krypt::Asn1
     end
 
     module Set
+      extend Helper
+
       def self.included(base)
-        Helper.init_cons_definition(base, nil)
+        create_constructed_definition(base, nil)
         base.extend(ClassMethods)
       end
 
@@ -64,6 +40,22 @@ module Krypt::Asn1
 
     module Choice
       def self.included(base)
+        #base.instance_variable_set(
+        #  :@definition,
+        #  Definitions::Root.new(
+        #    parser: nil,
+        #    encoder: nil
+        #  )
+        #)
+
+        #[
+        #  Accessors::Constructed,
+        #  Definitions::ConstructedClassMethods,
+        #  Parser,
+        #  Encoder
+        #].each { |mod| base.extend(mod) }
+        #
+        #
         #base.instance_variable_set(
         #  :@definition,
         #  Definitions::RootChoice.new
