@@ -3,7 +3,7 @@ module Krypt::Asn1
     module Definitions
       module Choice
         module Types
-          class Any < ValueFieldDefinition
+          class Any < FieldDefinition
 
             def initialize(options)
               super(options.merge(

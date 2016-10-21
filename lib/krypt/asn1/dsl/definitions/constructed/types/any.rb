@@ -10,14 +10,10 @@ module Krypt::Asn1
                 parser: Parsers::Any,
                 encoder: nil
               ))
-
-              unless mandatory? || custom_tag
-                raise "ANY cannot be optional without an explicit custom tag"
-              end
             end
 
             def matches?(value)
-              return true if mandatory?
+              return true unless custom_tag
               tag = value.tag
               # custom tag is set because field is optional
               tag.tag == custom_tag && tag.tag_class == expected_tag_class

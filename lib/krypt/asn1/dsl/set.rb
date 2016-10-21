@@ -3,8 +3,8 @@ module Krypt::Asn1
 
     module Set
       def self.included(base)
-        Helper.create_constructed_definition(base, nil)
         base.extend(ClassMethods)
+        Helper.create_constructed_definition(base, nil)
       end
 
       module ClassMethods

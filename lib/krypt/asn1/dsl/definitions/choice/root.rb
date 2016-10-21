@@ -3,11 +3,17 @@ module Krypt::Asn1
     module Definitions
       module Choice
         class Root
+          include BaseRootDefinition
 
           attr_reader :choices
 
           def initialize
             @choices = []
+          end
+
+          def matches?(asn1, options)
+            # TODO handle options
+            choices.any? { |field| field.matches?(asn1) }
           end
 
           def parse(asn1, instance)

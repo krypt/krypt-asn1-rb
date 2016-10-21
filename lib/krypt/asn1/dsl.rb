@@ -20,7 +20,7 @@ module Krypt::Asn1
       def create_constructed_definition(base, encoder)
         base.instance_variable_set(
           :@definition,
-          Definitions::Constructed::Root.new
+          Definitions::Constructed::Root.new(base.default_tag)
         )
 
         [
@@ -35,7 +35,7 @@ module Krypt::Asn1
       def create_constructed_of_definition(base, encoder)
         base.instance_variable_set(
           :@definition,
-          Definitions::ConstructedOf::Root.new
+          Definitions::ConstructedOf::Root.new(base.default_tag)
         )
 
         [

@@ -40,6 +40,7 @@ module Krypt::Asn1
 
             def assign_value(value_matcher, field, instance)
               value = value_matcher.current_value
+
               if field.matches?(value)
                 field.parse(unwrap_explicit(value, field), instance)
                 value_matcher.matched!
