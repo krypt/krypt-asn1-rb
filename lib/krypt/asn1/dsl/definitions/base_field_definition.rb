@@ -1,7 +1,7 @@
 module Krypt::Asn1
   module DSL
     module Definitions
-      class FieldDefinition
+      module BaseFieldDefinition
 
         attr_reader *%i{
           parser
@@ -14,20 +14,12 @@ module Krypt::Asn1
           @options = options[:options] || {}
         end
 
-        def optional?
-          @options[:optional]
+        def parse(asn1, instance)
+          parser.parse(asn1, instance, self)
         end
 
-        def mandatory?
-          !optional?
-        end
-
-        def default_value?
-          @options.has_key?(:default)
-        end
-
-        def default_value
-          @options[:default]
+        def encode(instance)
+          encoder.encode(instance, self)
         end
 
         def custom_tag
@@ -48,3 +40,4 @@ module Krypt::Asn1
     end
   end
 end
+

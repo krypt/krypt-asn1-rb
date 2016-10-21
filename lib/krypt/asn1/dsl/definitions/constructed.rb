@@ -1,7 +1,7 @@
-require_relative 'constructed/any'
+require_relative 'constructed/field_definition'
+require_relative 'constructed/named_field_definition'
+require_relative 'constructed/root'
+require_relative 'constructed/singular_field_definition'
+
+require_relative 'constructed/accessor'
 require_relative 'constructed/class_methods'
-require_relative 'constructed/constructed_of'
-require_relative 'constructed/object'
-require_relative 'constructed/primitive'
-require_relative 'constructed/sequence_of'
-require_relative 'constructed/set_of'

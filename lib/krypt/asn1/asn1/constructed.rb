@@ -1,5 +1,3 @@
-# encoding: BINARY
-
 module Krypt
   module Asn1
     class Constructed < Asn1Base

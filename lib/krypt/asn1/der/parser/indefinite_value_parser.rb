@@ -1,5 +1,3 @@
-# encoding: BINARY
-
 module Krypt::Asn1
   class Der::IndefiniteValueParser
 
@@ -12,7 +10,7 @@ module Krypt::Asn1
     def read(len=nil, outbuf=nil)
       return nil if @state == :done
 
-      buf = ""
+      buf = String.new
       read_bytes(len, buf)
 
       if outbuf

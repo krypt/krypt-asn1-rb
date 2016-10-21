@@ -1,5 +1,3 @@
-# encoding: BINARY
-
 module Krypt::Asn1
   module Der::LengthEncoder
 

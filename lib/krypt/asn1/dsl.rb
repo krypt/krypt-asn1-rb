@@ -1,18 +1,14 @@
-require_relative 'dsl/helper'
 require_relative 'dsl/asn1_object'
-require_relative 'dsl/accessors'
-require_relative 'dsl/encoder'
-require_relative 'dsl/parser'
+require_relative 'dsl/encoders'
+require_relative 'dsl/parsers'
 require_relative 'dsl/definitions'
 
 module Krypt::Asn1
   module DSL
 
     module Sequence
-      extend Helper
-
       def self.included(base)
-        create_constructed_definition(base, nil)
+        Helper.create_constructed_definition(base, nil)
         base.extend(ClassMethods)
       end
 
@@ -24,10 +20,8 @@ module Krypt::Asn1
     end
 
     module Set
-      extend Helper
-
       def self.included(base)
-        create_constructed_definition(base, nil)
+        Helper.create_constructed_definition(base, nil)
         base.extend(ClassMethods)
       end
 
@@ -40,37 +34,40 @@ module Krypt::Asn1
 
     module Choice
       def self.included(base)
-        #base.instance_variable_set(
-        #  :@definition,
-        #  Definitions::Root.new(
-        #    parser: nil,
-        #    encoder: nil
-        #  )
-        #)
+        base.instance_variable_set(
+          :@definition,
+          Definitions::Choice::Root.new
+        )
 
-        #[
-        #  Accessors::Constructed,
-        #  Definitions::ConstructedClassMethods,
-        #  Parser,
-        #  Encoder
-        #].each { |mod| base.extend(mod) }
-        #
-        #
-        #base.instance_variable_set(
-        #  :@definition,
-        #  Definitions::RootChoice.new
-        #)
+        [
+          Definitions::Choice::Accessor,
+          Definitions::ConstructedClassMethods,
+          Parsers::Choice
+        ].each { |mod| base.extend(mod) }
 
-        #[
-        #  Accessors::Choice,
-        #  Definitions::ChoiceClassMethods,
-        #  Parser,
-        #  Encoder
-        #].each { |mod| base.extend(mod) }
+        base.include(Encoders::Choice)
 
-        #[:value, :tag, :type].each do |field|
-        #  base.asn1_attr_reader field
-        #end
+        [:tag, :type].each { |field| base.attr_reader field }
+      end
+    end
+
+    module Helper
+
+      module_function
+
+      def create_constructed_definition(base, encoder)
+        base.instance_variable_set(
+          :@definition,
+          Definitions::Constructed::Root.new
+        )
+
+        [
+          Definitions::Constructed::Accessor,
+          Definitions::Constructed::ClassMethods,
+          Parsers::Constructed
+        ].each { |mod| base.extend(mod) }
+
+        base.include(Encoders::Constructed)
       end
     end
 

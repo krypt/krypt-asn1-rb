@@ -1,7 +1,7 @@
 module Krypt::Asn1
   module DSL
     module Parsers
-      module Constructed
+      module Choice
 
         def parse(io_or_string)
           from_asn1(Krypt::Asn1.parse(io_or_string))
@@ -19,3 +19,4 @@ module Krypt::Asn1
     end
   end
 end
+
