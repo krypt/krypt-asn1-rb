@@ -5,18 +5,13 @@ module Krypt::Asn1
       module_function
 
       def encode_value(object, value)
-        enc = value.encoding
-        if enc == Encoding::BINARY
-          value
-        else
-          encode(value, enc)
-        end
+        value.encoding == Encoding::BINARY ? value : encode(value)
       end
 
       private; module_function
 
-      def encode(value, enc)
-        if enc.ascii_compatible?
+      def encode(value)
+        if value.encoding.ascii_compatible?
           value.dup.force_encoding(Encoding::BINARY)
         else
           value.encode(Encoding::BINARY)

@@ -5,6 +5,7 @@ module Krypt::Asn1
 
     def next_header(io, parser)
       return nil if io.eof?
+
       tag = Der::TagParser.parse_tag(io)
       length = Der::LengthParser.parse_length(io)
       Der::Header.new(tag, length, parser)
@@ -12,6 +13,7 @@ module Krypt::Asn1
 
     def value_parser(io, header)
       length = header.length
+
       if length.indefinite?
         Der::IndefiniteValueParser.new(io)
       else

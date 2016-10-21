@@ -7,9 +7,9 @@ module Krypt::Asn1
     module_function
 
     def to_der(der)
-      io = StringIO.new(String.new)
-      encode_to(io, der)
-      io.string
+      StringIO.new(String.new).tap do |io|
+        encode_to(io, der)
+      end.string
     end
 
     def encode_to(io, der)

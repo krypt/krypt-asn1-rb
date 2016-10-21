@@ -5,17 +5,16 @@ module Krypt::Asn1
       module_function
 
       def parse_value(bytes)
-        oid = []
-        n, off = parse_int(bytes, 0)
-        set_first(n, oid)
+        [].tap do |oid|
+          n, off = parse_int(bytes, 0)
+          set_first(n, oid)
 
-        loop do
-          n, off = parse_int(bytes, off)
-          break unless n
-          oid << n
+          loop do
+            n, off = parse_int(bytes, off)
+            break unless n
+            oid << n
+          end
         end
-
-        oid
       end
 
       private; module_function

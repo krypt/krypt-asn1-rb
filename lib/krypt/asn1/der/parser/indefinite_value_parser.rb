@@ -13,11 +13,7 @@ module Krypt::Asn1
       buf = String.new
       read_bytes(len, buf)
 
-      if outbuf
-        outbuf.replace(buf)
-      else
-        buf
-      end
+      outbuf ? outbuf.replace(buf) : buf
     end
 
     private
@@ -25,6 +21,7 @@ module Krypt::Asn1
     def read_bytes(len, buf)
       total = 0
       to_read = len
+
       while total != len && @state != :done
         s = send(@state, to_read)
         if s
@@ -44,21 +41,27 @@ module Krypt::Asn1
     end
 
     def process_tag(len)
-      read_header_bytes(@current_header.tag.encoding, len, :process_length)
+      read_header_bytes(
+        @current_header.tag.encoding,
+        len,
+        :process_length
+      )
     end
 
     def process_length(len)
-      s = read_header_bytes(@current_header.length.encoding, len, :process_value)
-      check_done
-      s
+      read_header_bytes(
+        @current_header.length.encoding,
+        len,
+        :process_value
+      ).tap { |_| check_done }
     end
 
     def process_value(len)
-      s = @current_header.value_io.read(len)
-      if s.nil? && @state != :done
-        @state = :read_header
+      @current_header.value_io.read(len).tap do |s|
+        if s.nil? && @state != :done
+          @state = :read_header
+        end
       end
-      s
     end
 
     def read_header_bytes(bytes, len, next_state)
@@ -72,9 +75,9 @@ module Krypt::Asn1
     end
 
     def n_header_bytes(bytes, n)
-      ret = bytes.slice(@header_offset, n)
-      @header_offset += n
-      ret
+      bytes.slice(@header_offset, n).tap do |_|
+        @header_offset += n
+      end
     end
 
     def all_header_bytes(bytes, n, next_state)
@@ -88,6 +91,7 @@ module Krypt::Asn1
     # been consumed. As an EOC contains no value, we are done
     def check_done
       tag = @current_header.tag
+
       if (tag.tag == 0x00 &&
           tag.tag_class == 0x00 &&
           @state == :process_value)

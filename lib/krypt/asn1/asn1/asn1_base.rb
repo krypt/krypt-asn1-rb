@@ -21,9 +21,9 @@ module Krypt::Asn1
     end
 
     def to_der
-      io = StringIO.new(String.new)
-      encode_to(io)
-      io.string
+      StringIO.new(String.new).tap do |io|
+        encode_to(io)
+      end.string
     end
 
     def encode_to(io)
@@ -36,9 +36,9 @@ module Krypt::Asn1
     end
 
     def to_s
-      visitor = DisplayVisitor.new
-      accept(visitor)
-      visitor.to_s
+      DisplayVisitor.new.tap do |visitor|
+        accept(visitor)
+      end.to_s
     end
   end
 end

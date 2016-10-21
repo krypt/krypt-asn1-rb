@@ -1,55 +1,17 @@
 require_relative 'dsl/asn1_object'
-require_relative 'dsl/encoders'
-require_relative 'dsl/parsers'
 require_relative 'dsl/definitions'
+require_relative 'dsl/encoder'
+require_relative 'dsl/parser'
+require_relative 'dsl/presenter'
+
+require_relative 'dsl/choice'
+require_relative 'dsl/sequence'
+require_relative 'dsl/sequence_of'
+require_relative 'dsl/set'
+require_relative 'dsl/set_of'
 
 module Krypt::Asn1
   module DSL
-
-    module Sequence
-      def self.included(base)
-        Helper.create_constructed_definition(base, nil)
-        base.extend(ClassMethods)
-      end
-
-      module ClassMethods
-        def default_tag
-          SEQUENCE
-        end
-      end
-    end
-
-    module Set
-      def self.included(base)
-        Helper.create_constructed_definition(base, nil)
-        base.extend(ClassMethods)
-      end
-
-      module ClassMethods
-        def default_tag
-          SET
-        end
-      end
-    end
-
-    module Choice
-      def self.included(base)
-        base.instance_variable_set(
-          :@definition,
-          Definitions::Choice::Root.new
-        )
-
-        [
-          Definitions::Choice::Accessor,
-          Definitions::ConstructedClassMethods,
-          Parsers::Choice
-        ].each { |mod| base.extend(mod) }
-
-        base.include(Encoders::Choice)
-
-        [:tag, :type].each { |field| base.attr_reader field }
-      end
-    end
 
     module Helper
 
@@ -64,10 +26,28 @@ module Krypt::Asn1
         [
           Definitions::Constructed::Accessor,
           Definitions::Constructed::ClassMethods,
-          Parsers::Constructed
+          Parser
         ].each { |mod| base.extend(mod) }
 
-        base.include(Encoders::Constructed)
+        [ Encoder, Presenter ].each { |mod| base.include(mod) }
+      end
+
+      def create_constructed_of_definition(base, encoder)
+        base.instance_variable_set(
+          :@definition,
+          Definitions::ConstructedOf::Root.new
+        )
+
+        [
+          Definitions::ConstructedOf::ClassMethods,
+          Parser
+        ].each { |mod| base.extend(mod) }
+
+        [
+          Definitions::ConstructedOf::Accessor,
+          Encoder,
+          Presenter
+        ].each { |mod| base.include(mod) }
       end
     end
 

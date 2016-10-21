@@ -2,7 +2,15 @@ module Krypt::Asn1
   module DSL
     module Definitions
       module Choice
-        class SingularFieldDefinition < FieldDefinition
+        class SingularFieldDefinition < ValueFieldDefinition
+
+          attr_reader :type
+
+          def initialize(options)
+            super
+
+            @type = options[:type]
+          end
 
           def matches?(value)
             tag = value.tag

@@ -29,18 +29,18 @@ module Krypt::Asn1
       private
 
       def parse_values
-        objects = []
-        io = StringIO.new(@der_value)
+        [].tap do |objects|
+          io = StringIO.new(@der_value)
 
-        while object = Krypt::Asn1::Parser.parse(io)
-          objects << object
+          while object = Krypt::Asn1::Parser.parse(io)
+            objects << object
+          end
+
+          # do not include END_OF_CONTENT
+          objects.pop if @length.indefinite?
+          # erase the cached encoding
+          remove_instance_variable(:@der_value)
         end
-
-        # do not include END_OF_CONTENT
-        objects.pop if @length.indefinite?
-        # erase the cached encoding
-        remove_instance_variable(:@der_value)
-        objects
       end
 
       def cached_encode_to(io)

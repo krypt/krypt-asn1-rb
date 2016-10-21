@@ -13,10 +13,10 @@ module Krypt
       class << self
 
         def from_der(der)
-          obj = allocate
-          asn1 = Asn1::Parser.new_parsable_primitive(obj, der)
-          obj.instance_variable_set(:@asn1, asn1)
-          obj
+          allocate.tap do |obj|
+            asn1 = Asn1::Parser.new_parsable_primitive(obj, der)
+            obj.instance_variable_set(:@asn1, asn1)
+          end
         end
 
       end

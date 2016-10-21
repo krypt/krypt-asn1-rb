@@ -4,10 +4,16 @@ module Krypt::Asn1
       module Choice
         module Accessor
 
-          def asn1_attr_reader(name)
-            define_method name do
-              # TODO
-            end
+          def asn1_type
+            @asn1&.class
+          end
+
+          def tag
+            @asn1&.tag
+          end
+
+          def value
+            @asn1&.value
           end
 
         end

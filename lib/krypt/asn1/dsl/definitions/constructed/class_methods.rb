@@ -4,7 +4,7 @@ require_relative 'parsers/constructed_of'
 require_relative 'parsers/object'
 require_relative 'parsers/primitive'
 
-require_relative 'types/constructed_of'
+require_relative 'types/any'
 require_relative 'types/constructed_of'
 require_relative 'types/object'
 require_relative 'types/primitive'

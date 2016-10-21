@@ -23,6 +23,7 @@ module Krypt::Asn1
           tmp.prepend(byte.chr)
           n >>= 7
         end
+
         buf << tmp
       end
 

@@ -12,9 +12,10 @@ module Krypt::Asn1
 
       def sort_values(values)
         return values.sort if values.respond_to?(:sort)
-        ary = []
-        values.each { |v| ary << v }
-        ary.sort
+
+        [].tap do |ary|
+          values.each { |v| ary << v }
+        end.sort
       end
 
     end

@@ -40,21 +40,25 @@ module Krypt::Asn1
     end
 
     def write_header(der)
-     write("<#{der.class.name}[#{tag_class(der)} #{der.tag.tag} #{length(der)}]")
+     write("<#{demodulize(der.class.name)}[#{tag_class(der)} #{der.tag.tag} #{length(der)}]")
     end
 
     def tag_class(der)
       tc = case der.tag.tag_class
-      when Der::TagClass::UNIVERSAL then :UNIVERSAL
-      when Der::TagClass::APPLICATION then :APPLICATION
-      when Der::TagClass::CONTEXT_SPECIFIC then :CONTEXT_SPECIFIC
-      when Der::TagClass::PRIVATE then :PRIVATE
+      when Der::TagClass::UNIVERSAL then :UNV
+      when Der::TagClass::APPLICATION then :APP
+      when Der::TagClass::CONTEXT_SPECIFIC then :CTX
+      when Der::TagClass::PRIVATE then :PRV
       end
     end
 
     def length(der)
       len = der.length
       len.indefinite? ? :indefinite : "length: #{len.length}"
+    end
+
+    def demodulize(s)
+      s.split('::').last || ''
     end
 
   end
