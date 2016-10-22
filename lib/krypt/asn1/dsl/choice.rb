@@ -1,4 +1,4 @@
-module Krypt::Asn1
+module Krypt::ASN1
   module DSL
     module Choice
       def self.included(base)

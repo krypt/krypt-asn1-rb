@@ -2,9 +2,9 @@
 
 require 'spec_helper'
 
-describe "Asn1 object equality" do
+describe "ASN1 object equality" do
 
-  let(:asn) { Krypt::Asn1 }
+  let(:asn) { Krypt::ASN1 }
 
   subject { a == b && b == a } # ensure equality is commutative
 

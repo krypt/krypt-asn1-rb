@@ -2,12 +2,12 @@
 
 require 'spec_helper'
 
-RSpec.describe Krypt::Asn1::Der do
+RSpec.describe Krypt::ASN1::Der do
 
-  let(:der) { Krypt::Asn1::Der }
-  let(:tag) { Krypt::Asn1::Der::Tag }
-  let(:tag_class) { Krypt::Asn1::Der::TagClass }
-  let(:len) { Krypt::Asn1::Der::Length }
+  let(:der) { Krypt::ASN1::Der }
+  let(:tag) { Krypt::ASN1::Der::Tag }
+  let(:tag_class) { Krypt::ASN1::Der::TagClass }
+  let(:len) { Krypt::ASN1::Der::Length }
 
   describe '#to_der' do
 
@@ -23,7 +23,7 @@ RSpec.describe Krypt::Asn1::Der do
           let(:tc) { tag_class::UNIVERSAL }
 
           context 'INTEGER' do
-            let(:t) { Krypt::Asn1::INTEGER }
+            let(:t) { Krypt::ASN1::INTEGER }
 
             context '0' do
               let(:v) { "\x00" }
@@ -55,7 +55,7 @@ RSpec.describe Krypt::Asn1::Der do
           let(:tc) { tag_class::UNIVERSAL }
 
           context 'OCTET STRING' do
-            let(:t) { Krypt::Asn1::OCTET_STRING }
+            let(:t) { Krypt::ASN1::OCTET_STRING }
 
             context '07' do
               let(:v) { "\x04\x01\x07\x00\x00" }

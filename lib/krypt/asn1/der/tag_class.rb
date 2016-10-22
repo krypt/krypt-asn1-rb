@@ -1,4 +1,4 @@
-module Krypt::Asn1
+module Krypt::ASN1
   module Der::TagClass
 
     UNIVERSAL = 0x00

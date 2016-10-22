@@ -11,7 +11,7 @@ require_relative 'types/primitive'
 require_relative 'types/sequence_of'
 require_relative 'types/set_of'
 
-module Krypt::Asn1
+module Krypt::ASN1
   module DSL
     module Definitions
       module Constructed

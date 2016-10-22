@@ -1,4 +1,4 @@
-module Krypt::Asn1
+module Krypt::ASN1
   class Integer < Primitive
 
     def self.default_tag

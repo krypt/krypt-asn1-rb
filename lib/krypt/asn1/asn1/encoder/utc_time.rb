@@ -1,6 +1,6 @@
 require 'time'
 
-module Krypt::Asn1
+module Krypt::ASN1
   module Encoder
     module UtcTime
 

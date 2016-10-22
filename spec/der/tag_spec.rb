@@ -2,10 +2,10 @@
 
 require 'spec_helper'
 
-describe Krypt::Asn1::Der::Tag do
+describe Krypt::ASN1::Der::Tag do
 
-  let(:tag) { Krypt::Asn1::Der::Tag }
-  let(:tag_class) { Krypt::Asn1::Der::TagClass }
+  let(:tag) { Krypt::ASN1::Der::Tag }
+  let(:tag_class) { Krypt::ASN1::Der::TagClass }
 
   describe '#encoding' do
 
@@ -15,7 +15,7 @@ describe Krypt::Asn1::Der::Tag do
       let(:tc) { tag_class::UNIVERSAL }
 
       context 'NULL' do
-        let(:t) { Krypt::Asn1::NULL }
+        let(:t) { Krypt::ASN1::NULL }
 
         it 'encodes to \x05' do
           expect(subject.encoding).to eq("\x05")
@@ -27,7 +27,7 @@ describe Krypt::Asn1::Der::Tag do
       let(:tc) { tag_class::APPLICATION }
 
       context 'NULL' do
-        let(:t) { Krypt::Asn1::NULL }
+        let(:t) { Krypt::ASN1::NULL }
 
         it 'encodes to \x45' do
           expect(subject.encoding).to eq("\x45")
@@ -39,7 +39,7 @@ describe Krypt::Asn1::Der::Tag do
       let(:tc) { tag_class::CONTEXT_SPECIFIC }
 
       context 'NULL' do
-        let(:t) { Krypt::Asn1::NULL }
+        let(:t) { Krypt::ASN1::NULL }
 
         it 'encodes to \x85' do
           expect(subject.encoding).to eq("\x85")
@@ -51,7 +51,7 @@ describe Krypt::Asn1::Der::Tag do
       let(:tc) { tag_class::PRIVATE }
 
       context 'NULL' do
-        let(:t) { Krypt::Asn1::NULL }
+        let(:t) { Krypt::ASN1::NULL }
 
         it 'encodes to \xC5' do
           expect(subject.encoding).to eq("\xC5")

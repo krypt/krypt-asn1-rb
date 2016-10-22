@@ -4,7 +4,7 @@ require_relative 'parser/length_parser'
 require_relative 'parser/definite_value_parser'
 require_relative 'parser/indefinite_value_parser'
 
-module Krypt::Asn1
+module Krypt::ASN1
   class Der::Parser
 
     attr_reader :io

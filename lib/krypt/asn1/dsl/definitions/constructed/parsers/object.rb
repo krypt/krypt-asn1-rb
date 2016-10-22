@@ -1,4 +1,4 @@
-module Krypt::Asn1
+module Krypt::ASN1
   module DSL
     module Definitions
       module Constructed
@@ -11,7 +11,7 @@ module Krypt::Asn1
               parsed = definition.type.from_asn1(value)
               instance.instance_variable_set(
                 definition.iv_name,
-                Asn1Object.new(parsed)
+                ASN1Object.new(parsed)
               )
             end
 

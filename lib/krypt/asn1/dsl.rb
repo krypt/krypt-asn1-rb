@@ -10,7 +10,7 @@ require_relative 'dsl/sequence_of'
 require_relative 'dsl/set'
 require_relative 'dsl/set_of'
 
-module Krypt::Asn1
+module Krypt::ASN1
   module DSL
 
     module Helper

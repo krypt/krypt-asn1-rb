@@ -12,7 +12,7 @@ require_relative 'parser/utc_time'
 require_relative 'parser/utf8_string'
 
 module Krypt
-  module Asn1
+  module ASN1
     module Parser
 
       PARSERS = [
@@ -82,7 +82,7 @@ module Krypt
 
         if tc == Der::TagClass::UNIVERSAL
           raise "Invalid tag for UNIVERSAL class: #{tag}" if t > 30
-          c = Asn1::UNIVERSAL_CLASSES[t]
+          c = ASN1::UNIVERSAL_CLASSES[t]
           return c.from_der(der) if c
         end
 

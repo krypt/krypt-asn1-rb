@@ -2,11 +2,11 @@
 
 require 'spec_helper'
 
-RSpec.describe Krypt::Asn1::Der::Parser do
+RSpec.describe Krypt::ASN1::Der::Parser do
 
-  let(:parser) { Krypt::Asn1::Der::Parser }
-  let(:tag) { Krypt::Asn1::Der::Tag }
-  let(:tag_class) { Krypt::Asn1::Der::TagClass }
+  let(:parser) { Krypt::ASN1::Der::Parser }
+  let(:tag) { Krypt::ASN1::Der::Tag }
+  let(:tag_class) { Krypt::ASN1::Der::TagClass }
 
   describe '#next_header' do
 
@@ -21,7 +21,7 @@ RSpec.describe Krypt::Asn1::Der::Parser do
             subject { parser.new(enc).next_header.tag }
 
             it "has an INTEGER tag" do
-              expect(subject.tag).to eq(Krypt::Asn1::INTEGER)
+              expect(subject.tag).to eq(Krypt::ASN1::INTEGER)
             end
             it "is primitive" do
               expect(subject.constructed?).to eq(false)
@@ -63,7 +63,7 @@ RSpec.describe Krypt::Asn1::Der::Parser do
             subject { parser.new(enc).next_header.tag }
 
             it "has an OCTET_STRING tag" do
-              expect(subject.tag).to eq(Krypt::Asn1::OCTET_STRING)
+              expect(subject.tag).to eq(Krypt::ASN1::OCTET_STRING)
             end
             it "is primitive" do
               expect(subject.constructed?).to eq(false)
@@ -105,7 +105,7 @@ RSpec.describe Krypt::Asn1::Der::Parser do
             subject { parser.new(enc).next_header.tag }
 
             it "has an OCTET_STRING tag" do
-              expect(subject.tag).to eq(Krypt::Asn1::OCTET_STRING)
+              expect(subject.tag).to eq(Krypt::ASN1::OCTET_STRING)
             end
             it "is primitive" do
               expect(subject.constructed?).to eq(false)
@@ -286,7 +286,7 @@ RSpec.describe Krypt::Asn1::Der::Parser do
           subject { parser.new(enc).next_header.tag }
 
           it "has OCTET_STRING tag" do
-            expect(subject.tag).to eq(Krypt::Asn1::OCTET_STRING)
+            expect(subject.tag).to eq(Krypt::ASN1::OCTET_STRING)
           end
           it "is constructed" do
             expect(subject.constructed?).to eq(true)
@@ -334,7 +334,7 @@ RSpec.describe Krypt::Asn1::Der::Parser do
         subject { parser.new(enc).next_header.tag }
 
         it "has BOOLEAN tag" do
-          expect(subject.tag).to eq(Krypt::Asn1::BOOLEAN)
+          expect(subject.tag).to eq(Krypt::ASN1::BOOLEAN)
         end
         it "is primitive" do
           expect(subject.constructed?).to eq(false)

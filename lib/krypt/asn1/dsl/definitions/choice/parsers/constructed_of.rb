@@ -1,4 +1,4 @@
-module Krypt::Asn1
+module Krypt::ASN1
   module DSL
     module Definitions
       module Choice
@@ -15,7 +15,7 @@ module Krypt::Asn1
               end
               instance.instance_variable_set(
                 :@value,
-                Asn1Object.new(parsed)
+                ASN1Object.new(parsed)
               )
             end
 

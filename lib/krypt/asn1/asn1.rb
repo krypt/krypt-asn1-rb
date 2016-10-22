@@ -6,7 +6,7 @@ require_relative 'asn1/constructed'
 require_relative 'asn1/encoder'
 require_relative 'asn1/parser'
 
-module Krypt::Asn1
+module Krypt::ASN1
 
   END_OF_CONTENTS  = 0x00
   BOOLEAN          = 0x01

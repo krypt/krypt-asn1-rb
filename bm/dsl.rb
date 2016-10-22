@@ -3,7 +3,7 @@ require 'krypt/asn1'
 require 'openssl'
 
 class A
-  include Krypt::Asn1::DSL::Sequence
+  include Krypt::ASN1::DSL::Sequence
 
   asn1_integer :version, optional: true, default: 3
   asn1_ia5_string :text
@@ -11,10 +11,10 @@ class A
   asn1_integer :size
 end
 
-data = Krypt::Asn1::Sequence.new([
-  Krypt::Asn1::Ia5String.new("test"),
-  Krypt::Asn1::Boolean.new(true),
-  Krypt::Asn1::Integer.new(42)
+data = Krypt::ASN1::Sequence.new([
+  Krypt::ASN1::Ia5String.new("test"),
+  Krypt::ASN1::Boolean.new(true),
+  Krypt::ASN1::Integer.new(42)
 ]).to_der
 
 n = 40_000
@@ -27,9 +27,9 @@ Benchmark.bm do |bm|
     end
   end
 
-  bm.report("Krypt::Asn1::decode") do
+  bm.report("Krypt::ASN1::decode") do
     n.times do
-      Krypt::Asn1.decode(data)
+      Krypt::ASN1.decode(data)
     end
   end
 

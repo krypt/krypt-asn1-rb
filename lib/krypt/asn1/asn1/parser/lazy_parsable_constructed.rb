@@ -1,4 +1,4 @@
-module Krypt::Asn1
+module Krypt::ASN1
   module Parser
     class LazyParsableConstructed
 
@@ -32,7 +32,7 @@ module Krypt::Asn1
         [].tap do |objects|
           io = StringIO.new(@der_value)
 
-          while object = Krypt::Asn1::Parser.parse(io)
+          while object = Krypt::ASN1::Parser.parse(io)
             objects << object
           end
 

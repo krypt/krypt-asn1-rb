@@ -1,9 +1,9 @@
 module Krypt
-  module Asn1
-    class Primitive < Asn1Base
+  module ASN1
+    class Primitive < ASN1Base
 
       def initialize(value, options={})
-        @asn1 = Asn1::Encoder.new_encodable_primitive(self, value, options)
+        @asn1 = ASN1::Encoder.new_encodable_primitive(self, value, options)
       end
 
       def accept(visitor)
@@ -14,7 +14,7 @@ module Krypt
 
         def from_der(der)
           allocate.tap do |obj|
-            asn1 = Asn1::Parser.new_parsable_primitive(obj, der)
+            asn1 = ASN1::Parser.new_parsable_primitive(obj, der)
             obj.instance_variable_set(:@asn1, asn1)
           end
         end

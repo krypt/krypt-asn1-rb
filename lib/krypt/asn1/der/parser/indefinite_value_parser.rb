@@ -1,4 +1,4 @@
-module Krypt::Asn1
+module Krypt::ASN1
   class Der::IndefiniteValueParser
 
     def initialize(io)

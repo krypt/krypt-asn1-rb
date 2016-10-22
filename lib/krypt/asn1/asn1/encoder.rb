@@ -12,7 +12,7 @@ require_relative 'encoder/string_encoder'
 require_relative 'encoder/utc_time'
 require_relative 'encoder/utf8_string'
 
-module Krypt::Asn1
+module Krypt::ASN1
   module Encoder
 
     ENCODERS = [
@@ -57,7 +57,7 @@ module Krypt::Asn1
     end
 
     def new_encodable_constructed(object, values, options)
-      strategy = if Krypt::Asn1::SET == object.class.default_tag
+      strategy = if Krypt::ASN1::SET == object.class.default_tag
         Encoder::LazyEncodableSet
       else
         Encoder::LazyEncodableConstructed

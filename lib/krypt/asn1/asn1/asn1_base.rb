@@ -1,5 +1,5 @@
-module Krypt::Asn1
-  class Asn1Base
+module Krypt::ASN1
+  class ASN1Base
     include Comparable
 
     def self.default_tag; nil; end

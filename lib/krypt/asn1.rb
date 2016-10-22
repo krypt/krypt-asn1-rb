@@ -2,7 +2,7 @@ require 'stringio'
 
 
 module Krypt
-  module Asn1; end
+  module ASN1; end
 end
 
 require_relative 'asn1/comparator'

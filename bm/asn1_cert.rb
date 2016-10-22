@@ -19,9 +19,9 @@ Benchmark.bm do |bm|
     end
   end
 
-  bm.report("Krypt::Asn1::decode") do
+  bm.report("Krypt::ASN1::decode") do
     n.times do
-      Krypt::Asn1.decode(cert)
+      Krypt::ASN1.decode(cert)
     end
   end
 
@@ -43,9 +43,9 @@ Benchmark.bm do |bm|
     end
   end
 
-  bm.report("Krypt::Asn1::decode / to_der") do
+  bm.report("Krypt::ASN1::decode / to_der") do
     n.times do
-      c = Krypt::Asn1.decode(cert)
+      c = Krypt::ASN1.decode(cert)
       c.to_der
     end
   end

@@ -1,7 +1,7 @@
 require_relative 'encoder/tag_encoder'
 require_relative 'encoder/length_encoder'
 
-module Krypt::Asn1
+module Krypt::ASN1
   module Der::Encoder
 
     module_function

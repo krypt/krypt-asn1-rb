@@ -1,11 +1,11 @@
-module Krypt::Asn1
+module Krypt::ASN1
   module Helpers
     module EndOfContents
 
       module_function
 
       def add_eoc(values, io)
-        Krypt::Asn1::EndOfContents.new.encode_to(io) if needs_eoc?(values)
+        Krypt::ASN1::EndOfContents.new.encode_to(io) if needs_eoc?(values)
       end
 
       private; module_function

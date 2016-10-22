@@ -1,4 +1,4 @@
-module Krypt::Asn1
+module Krypt::ASN1
   class Utf8String < Primitive
 
     def self.default_tag
